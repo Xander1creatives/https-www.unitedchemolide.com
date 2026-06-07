@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Our Projects</title>
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Custom Tailwind config for precise breakpoints -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          screens: {
+            'xs': '200px',
+            'xx': '300px',
+            'sm-custom': '480px',
+            'md': '768px',
+            'xl-custom': '1440px',
+          },
+          borderRadius: {
+            '1px': '1px',
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.4s ease-out',
+            'slide-down': 'slideDown 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)',
+            'scale-in': 'scaleIn 0.25s ease-out',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideDown: {
+              '0%': { opacity: '0', transform: 'translateY(-20px)', maxHeight: '0' },
+              '100%': { opacity: '1', transform: 'translateY(0)', maxHeight: '2000px' },
+            },
+            scaleIn: {
+              '0%': { opacity: '0', transform: 'scale(0.9)' },
+              '100%': { opacity: '1', transform: 'scale(1)' },
+            },
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Custom styles for overflow prevention and smooth interactions -->
+  <style>
+    html {
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    body {
+      overflow-x: hidden;
+      min-width: 200px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+     /* Navbar */
+        #navbar {
+            transition: all 0.4s ease;
+            z-index: 1000;
+            border-radius: 0 !important;
+        }
+        .nav-transparent {
+            background: transparent;
+            box-shadow: none;
+        }
+        .nav-white {
+            background: #ffffff;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        #navbar.nav-white .nav-link {
+            color: #1a1a2e;
+        }
+        #navbar.nav-transparent .nav-link {
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+        #navbar.nav-white .nav-link:hover {
+            color: #0388db;
+        }
+        #navbar.nav-transparent .nav-link:hover {
+            color: #ffffff;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+        }
+        #navbar.nav-white .logo-dark {
+            display: block;
+        }
+        #navbar.nav-white .logo-light {
+            display: none;
+        }
+        #navbar.nav-transparent .logo-dark {
+            display: none;
+        }
+        #navbar.nav-transparent .logo-light {
+            display: block;
+        }
+        /* Dropdown */
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border-radius: 2px !important;
+        }
+        .dropdown-trigger:hover .dropdown-menu,
+        .dropdown-trigger:focus-within .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    .project-image {
+      transition: transform 0.4s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .project-image:hover {
+      transform: scale(1.02);
+      box-shadow: 0 20px 30px -10px rgba(0,0,0,0.15);
+    }
+    /* Modal lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(15,23,42,0.9);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .lightbox.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
+    .lightbox-content {
+      max-width: 90vw;
+      max-height: 85vh;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+    .lightbox-content img {
+      width: auto;
+      height: auto;
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+    }
+    .close-lightbox {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      font-size: 24px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .close-lightbox:hover {
+      background: rgba(239,68,68,0.8);
+    }
+    /* Read more paragraph */
+    .extra-text {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s;
+      opacity: 0;
+    }
+    .extra-text.expanded {
+      max-height: 200px; /* enough for paragraph */
+      opacity: 1;
+    }
+    .project-row {
+      overflow: hidden;
+      width: 100%;
+    }
+    @media screen and (max-width: 200px) {
+      .project-title { font-size: 10px !important; }
+      .project-desc { font-size: 8px !important; }
+    }
+    @media screen and (min-width: 201px) and (max-width: 300px) {
+      .project-title { font-size: 12px !important; }
+      .project-desc { font-size: 10px !important; }
+    }
+    body.modal-open {
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased min-w-[200px]">
+
+  <!-- Page Container -->
+  <div class="max-w-full overflow-x-hidden">
+
+     <!-- ==================== NAVBAR ==================== -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full nav-transparent transition-all duration-400 z-[1000]"
+    style="border-radius:0 !important;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 lg:h-18">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-2 flex-shrink-0"><img src="united chemolidelogo1.png"style="width: 125px; height: 50px;" ></a>
+                <span class="logo-light text-white font-bold text-xl lg:text-2xl tracking-tight">
+                   
+                </span>
+                
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center gap-1 lg:gap-3">
+                <a href="#home" class="nav-link px-3 py-2 text-sm font-medium transition-colors duration-300">Home</a>
+                <a href="#about" class="nav-link px-3 py-2 text-sm font-medium transition-colors duration-300">About</a>
+                <!-- Dropdown -->
+                <div class="dropdown-trigger relative">
+                    <button class="nav-link px-3 py-2 text-sm font-medium transition-colors duration-300 flex items-center gap-1">
+                        Products <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div class="dropdown-menu absolute top-full left-0 mt-1 bg-white shadow-lg min-w-[200px] py-2 z-50">
+                        <a href="index.html/#products" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-primary transition">Water Pumps</a>
+                        <a href="index.html/#products" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-primary transition">Irrigation Equipment</a>
+                        <a href="index.html/#products" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-primary transition">Solar Products</a>
+                        <a href="index.html/#products" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-primary transition">Water Treatment</a>
+                        <a href="index.html/#products" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-primary transition">Accessories</a>
+                    </div>
+                </div>
+                <a href="index.html/#services" class="nav-link px-3 py-2 text-sm font-medium transition-colors duration-300">Services</a>
+                <a href="index.html/#gallery" class="nav-link px-3 py-2 text-sm font-medium transition-colors duration-300">Gallery</a>
+                <a href="index.html/#testimonials" class="nav-link px-3 py-2 text-sm font-medium transition-colors duration-300">Testimonials</a>
+                <a href="index.html/#contact" class="nav-link px-3 py-2 text-sm font-medium transition-colors duration-300">Contact</a>
+            </div>
+            <!-- Hamburger -->
+            <button id="menuToggle" class="md:hidden text-white nav-link p-2" aria-label="Menu">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu md:hidden bg-white rounded-sm shadow-lg mx-2">
+            <a href="#home" class="block px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50">Home</a>
+            <a href="index.html/#about" class="block px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50">About</a>
+            <button id="mobileDropdownBtn" class="w-full text-left px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50 flex items-center justify-between">
+                Products <i class="fas fa-chevron-down text-xs transition-transform" id="mobileDropdownIcon"></i>
+            </button>
+            <div id="mobileDropdown" class="dropdown-menu bg-gray-50">
+                <a href="#products" class="block px-6 py-2 text-sm text-gray-600 hover:text-primary">Water Pumps</a>
+                <a href="#products" class="block px-6 py-2 text-sm text-gray-600 hover:text-primary">Irrigation Equipment</a>
+                <a href="#products" class="block px-6 py-2 text-sm text-gray-600 hover:text-primary">Solar Products</a>
+                <a href="#products" class="block px-6 py-2 text-sm text-gray-600 hover:text-primary">Water Treatment</a>
+                <a href="#products" class="block px-6 py-2 text-sm text-gray-600 hover:text-primary">Accessories</a>
+            </div>
+            <a href="index.html/#services" class="block px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50">Services</a>
+            <a href="index.html/#gallery" class="block px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50">Gallery</a>
+            <a href="index.html/#testimonials" class="block px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50">Testimonials</a>
+            <a href="index.html/#contact" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50">Contact</a>
+        </div>
+    </div>
+</nav>
+
+    <!-- Hero / intro -->
+    <section class="bg-gradient-to-r from-blue-700 to-blue-500 text-white py-10 md:py-16 px-4 text-center">
+      <h1 class="text-xl xs:text-2xl md:text-4xl xl-custom:text-5xl font-bold mb-3">Our Projects</h1>
+      <p class="text-xs xs:text-sm md:text-lg max-w-2xl mx-auto opacity-90">Delivering sustainable solutions in solar energy, water pumps, water treatment, and electrical installations.</p>
+    </section>
+
+    <!-- Projects Section -->
+    <main id="projects" class="max-w-7xl mx-auto px-3 xs:px-4 xx:px-5 sm-custom:px-6 md:px-8 py-8 md:py-12">
+
+      <!-- Project items container -->
+      <div id="projectsContainer" class="space-y-8 md:space-y-12">
+        <!-- Dynamically filled with JavaScript -->
+      </div>
+
+      <!-- Load more button -->
+      <div class="text-center mt-8 md:mt-10">
+        <button id="loadMoreBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 md:py-3 md:px-8 rounded-lg shadow-md transition-all duration-300 text-xs md:text-base hover:shadow-xl transform hover:-translate-y-0.5">
+          Show All Projects
+        </button>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-6 px-4 text-center text-xs md:text-sm">
+      <p>© 2026 UCIZ. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <div class="lightbox-content">
+      <button id="closeLightbox" class="close-lightbox" aria-label="Close">✕</button>
+      <img id="lightboxImg" src="" alt="project image full view">
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      // ============ PROJECT DATA (10 items) ============
+      const projects = [
+        {
+          title: 'Residential Solar Installation',
+          short: 'Complete rooftop solar systems for homes, reducing electricity bills and carbon footprint.',
+          extra: 'We handle design, permitting, installation, and net‑metering connection. Our packages include high‑efficiency monocrystalline panels, string inverters or microinverters, and 10‑year workmanship warranty. Average payback period is 4‑6 years.',
+          img: 'solar stands.png',
+        },
+        {
+          title: 'Commercial Solar Farm',
+          short: 'Large‑scale solar farms from 100 kW to 10 MW, delivering clean energy to businesses and utilities.',
+          extra: 'We provide turnkey EPC (Engineering, Procurement, Construction) services, including land assessment, module mounting structures, and grid interconnection. Monitoring systems give real‑time performance data.',
+          img: 'UCIZpost3.png',
+        },
+        {
+          title: 'Solar Water Pumps',
+          short: 'Replace diesel pumps with solar‑powered water pumping for irrigation and community supply.',
+          extra: 'Our solar pumps range from 1 HP to 10 HP, suitable for boreholes, open wells, and surface water. They require minimal maintenance and operate even in remote off‑grid locations with integrated MPPT controllers.',
+          img: 'pipes1.png',
+        },
+        {
+          title: 'Solar Home Lighting Kits',
+          short: 'Affordable solar lighting and phone charging kits for rural households without grid access.',
+          extra: 'Each kit includes a solar panel, lithium battery, LED bulbs, and USB ports. We also offer larger kits that can power fans and small TVs, improving quality of life and safety.',
+          img: 'inveter1.png',
+        },
+        {
+          title: 'High‑Pressure Booster Pumps',
+          short: 'Boost water pressure in high‑rise buildings, hotels, and industrial facilities.',
+          extra: 'We install variable‑speed booster sets with stainless steel multistage pumps. The systems automatically adjust to demand, saving energy and ensuring constant pressure on every floor.',
+          img: 'Tanks.png',
+        },
+        {
+          title: 'Industrial Water Pumps',
+          short: 'Heavy‑duty centrifugal and submersible pumps for factories, mines, and construction sites.',
+          extra: 'Our solutions cover dewatering, slurry handling, and process water circulation. We offer pump sizing, installation, and preventive maintenance contracts to minimise downtime.',
+          img: 'pipes1.png',
+        },
+        {
+          title: 'Electrical Wiring & Installation',
+          short: 'Safe and code‑compliant electrical installations for new buildings and renovations.',
+          extra: 'From distribution boards to lighting, power outlets, and backup generators – we manage the entire electrical scope. All work is certified and tested according to international IEC standards.',
+          img: 'different-electrical-tools-wooden-background-flat-lay.jpg',
+        },
+        {
+          title: 'Water Filtration Systems',
+          short: 'Multi‑stage filtration to remove sediments, chlorine, and odours for clean drinking water.',
+          extra: 'We install whole‑house and point‑of‑use systems using activated carbon, sediment filters, and UV sterilisation. Regular cartridge replacements and water testing keep your supply safe.',
+          img: 'Tanks people.png',
+        },
+        {
+          title: 'Water Purification & Treatment',
+          short: 'Advanced reverse osmosis (RO) and ultrafiltration plants for pure, safe water.',
+          extra: 'Ideal for communities, hospitals, and food processing. We design containerised or skid‑mounted plants with automated controls and remote monitoring. Capacity ranges from 500 to 50,000 litres per hour.',
+          img: 'UCIZpost6.png',
+        },
+        {
+          title: 'Rainwater Harvesting & Treatment',
+          short: 'Capture, store, and treat rainwater to supplement municipal supply or for irrigation.',
+          extra: 'Our systems include first‑flush diverters, filtration, and UV treatment. Combined with our solar pumps, you can have a fully self‑sufficient water supply with minimal environmental impact.',
+          img: 'UCIZpost4.png',
+        }
+      ];
+       // ============ NAVBAR SCROLL ============
+        const navbar = document.getElementById('navbar');
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileDropdownBtn = document.getElementById('mobileDropdownBtn');
+        const mobileDropdown = document.getElementById('mobileDropdown');
+        const mobileDropdownIcon = document.getElementById('mobileDropdownIcon');
+
+        function updateNavbar() {
+            if (window.scrollY > 60) {
+                navbar.classList.add('nav-white');
+                navbar.classList.remove('nav-transparent');
+            } else {
+                navbar.classList.add('nav-transparent');
+                navbar.classList.remove('nav-white');
+            }
+        }
+        window.addEventListener('scroll', updateNavbar);
+        updateNavbar();
+
+        // Mobile menu toggle
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('open');
+            const icon = menuToggle.querySelector('i');
+            if (mobileMenu.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Mobile dropdown
+        mobileDropdownBtn.addEventListener('click', () => {
+            mobileDropdown.classList.toggle('open');
+            mobileDropdownIcon.style.transform = mobileDropdown.classList.contains('open') ?
+                'rotate(180deg)' : 'rotate(0deg)';
+        });
+
+        // Close mobile menu on link click
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                menuToggle.querySelector('i').classList.remove('fa-times');
+                menuToggle.querySelector('i').classList.add('fa-bars');
+            });
+        });
+
+
+      const container = document.getElementById('projectsContainer');
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const closeLightbox = document.getElementById('closeLightbox');
+      const body = document.body;
+
+      let allProjectsRendered = false;
+
+      // Function to create a project row HTML
+      function createProjectRow(project, index) {
+        const isEven = index % 2 === 0;
+        const imageOrder = isEven ? 'md:order-1' : 'md:order-2';
+        const textOrder = isEven ? 'md:order-2' : 'md:order-1';
+
+        return `
+          <div class="project-row flex flex-col md:flex-row items-center bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+            <!-- Image side -->
+            <div class="w-full md:w-1/2 h-48 xs:h-56 sm-custom:h-64 md:h-72 ${imageOrder} overflow-hidden">
+              <img 
+                src="${project.img}" 
+                alt="${project.title}" 
+                class="project-image w-full h-full object-cover rounded-t-xl md:rounded-none md:rounded-l-xl"
+                loading="lazy"
+                data-full-img="${project.img}"
+                onclick="openLightbox('${project.img}')"
+              >
+            </div>
+            <!-- Text side -->
+            <div class="w-full md:w-1/2 p-4 xs:p-5 md:p-6 ${textOrder} flex flex-col justify-center">
+              <h3 class="project-title text-base xs:text-lg sm-custom:text-xl md:text-2xl font-bold text-gray-800 mb-2">${project.title}</h3>
+              <p class="project-desc text-xs xs:text-sm md:text-base text-gray-600 leading-relaxed">${project.short}</p>
+              <div class="extra-text mt-2" id="extra-${index}">
+                <p class="text-xs xs:text-sm md:text-base text-gray-500 leading-relaxed">${project.extra}</p>
+              </div>
+              <button 
+                class="read-more-btn mt-3 text-blue-600 hover:text-blue-800 font-medium text-xs md:text-sm self-start flex items-center gap-1 transition"
+                data-index="${index}"
+                aria-expanded="false"
+              >
+                <span class="btn-text">Read More</span>
+                <svg class="w-3 h-3 md:w-4 md:h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      // Render only first 4 projects initially
+      function renderInitial() {
+        container.innerHTML = '';
+        const count = Math.min(4, projects.length);
+        for (let i = 0; i < count; i++) {
+          container.innerHTML += createProjectRow(projects[i], i);
+        }
+        attachReadMoreListeners();
+        if (projects.length <= 4) {
+          loadMoreBtn.style.display = 'none';
+          allProjectsRendered = true;
+        }
+      }
+
+      // Render all projects
+      function renderAll() {
+        container.innerHTML = '';
+        projects.forEach((project, i) => {
+          container.innerHTML += createProjectRow(project, i);
+        });
+        attachReadMoreListeners();
+        allProjectsRendered = true;
+        loadMoreBtn.style.display = 'none';
+        document.getElementById('projects').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // Attach event listeners to "Read More" buttons
+      function attachReadMoreListeners() {
+        document.querySelectorAll('.read-more-btn').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            const index = this.getAttribute('data-index');
+            const extraDiv = document.getElementById(`extra-${index}`);
+            const icon = this.querySelector('svg');
+            const textSpan = this.querySelector('.btn-text');
+            const expanded = extraDiv.classList.contains('expanded');
+
+            if (expanded) {
+              extraDiv.classList.remove('expanded');
+              icon.style.transform = 'rotate(0deg)';
+              textSpan.textContent = 'Read More';
+              this.setAttribute('aria-expanded', 'false');
+            } else {
+              extraDiv.classList.add('expanded');
+              icon.style.transform = 'rotate(180deg)';
+              textSpan.textContent = 'Read Less';
+              this.setAttribute('aria-expanded', 'true');
+            }
+          });
+        });
+      }
+
+      // Lightbox functions
+      window.openLightbox = function(imgSrc) {
+        lightboxImg.src = imgSrc;
+        lightbox.classList.add('active');
+        lightbox.setAttribute('aria-hidden', 'false');
+        body.classList.add('modal-open');
+      };
+
+      function closeLightboxFunc() {
+        lightbox.classList.remove('active');
+        lightbox.setAttribute('aria-hidden', 'true');
+        body.classList.remove('modal-open');
+      }
+
+      closeLightbox.addEventListener('click', closeLightboxFunc);
+      lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) closeLightboxFunc();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          closeLightboxFunc();
+        }
+      });
+
+      // Load more button action
+      loadMoreBtn.addEventListener('click', renderAll);
+
+      // Initial render
+      renderInitial();
+
+      // Handle broken images gracefully
+      document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', function() {
+          this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="400"%3E%3Crect fill="%23e2e8f0" width="600" height="400"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%2394a3b8" font-size="24"%3EImage%3C/text%3E%3C/svg%3E';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

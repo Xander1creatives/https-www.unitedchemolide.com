@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Our Services | Dynamic Showcase</title>
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom Tailwind config for precise breakpoints -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          screens: {
+            'xs': '200px',
+            'xx': '300px',
+            'sm-custom': '480px',
+            'md': '768px',
+            'xl-custom': '1440px',
+          },
+          borderRadius: {
+            '1px': '1px',
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.4s ease-out',
+            'slide-down': 'slideDown 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)',
+            'scale-in': 'scaleIn 0.25s ease-out',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideDown: {
+              '0%': { opacity: '0', transform: 'translateY(-20px)', maxHeight: '0' },
+              '100%': { opacity: '1', transform: 'translateY(0)', maxHeight: '2000px' },
+            },
+            scaleIn: {
+              '0%': { opacity: '0', transform: 'scale(0.9)' },
+              '100%': { opacity: '1', transform: 'scale(1)' },
+            },
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Custom styles for overflow prevention and smooth interactions -->
+  <style>
+    html {
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    body {
+      overflow-x: hidden;
+      min-width: 200px;
+      -webkit-overflow-scrolling: touch;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    .service-image {
+      transition: transform 0.4s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .service-image:hover {
+      transform: scale(1.02);
+      box-shadow: 0 20px 30px -10px rgba(0,0,0,0.15);
+    }
+    /* Modal lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(15,23,42,0.9);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .lightbox.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
+    .lightbox-content {
+      max-width: 90vw;
+      max-height: 85vh;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+    .lightbox-content img {
+      width: auto;
+      height: auto;
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+    }
+    .close-lightbox {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      font-size: 24px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .close-lightbox:hover {
+      background: rgba(239,68,68,0.8);
+    }
+    /* Read more paragraph */
+    .extra-text {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s;
+      opacity: 0;
+    }
+    .extra-text.expanded {
+      max-height: 200px; /* enough for paragraph */
+      opacity: 1;
+    }
+    /* Prevent overflow from the service cards */
+    .service-row {
+      overflow: hidden;
+      width: 100%;
+    }
+    @media screen and (max-width: 200px) {
+      .service-title { font-size: 10px !important; }
+      .service-desc { font-size: 8px !important; }
+    }
+    @media screen and (min-width: 201px) and (max-width: 300px) {
+      .service-title { font-size: 12px !important; }
+      .service-desc { font-size: 10px !important; }
+    }
+    body.modal-open {
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased min-w-[200px]">
+
+  <!-- Page Container -->
+  <div class="max-w-full overflow-x-hidden">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
+      <div class="max-w-7xl mx-auto px-3 xs:px-4 xx:px-5 sm-custom:px-6 md:px-8 py-3 flex items-center justify-between">
+        <span class="font-bold text-base xs:text-lg md:text-2xl text-blue-700">Company<span class="text-gray-800">Services</span></span>
+        <nav class="space-x-3 xs:space-x-4 text-xs md:text-sm">
+          <a href="#" class="hover:text-blue-600 transition">Home</a>
+          <a href="#services" class="hover:text-blue-600 transition">Services</a>
+          <a href="#" class="hover:text-blue-600 transition">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero / intro -->
+    <section class="bg-gradient-to-r from-blue-700 to-blue-500 text-white py-10 md:py-16 px-4 text-center">
+      <h1 class="text-xl xs:text-2xl md:text-4xl xl-custom:text-5xl font-bold mb-3">Our Services</h1>
+      <p class="text-xs xs:text-sm md:text-lg max-w-2xl mx-auto opacity-90">We deliver cutting‑edge solutions across design, development, and strategy. Explore our work below.</p>
+    </section>
+
+    <!-- Services Section -->
+    <main id="services" class="max-w-7xl mx-auto px-3 xs:px-4 xx:px-5 sm-custom:px-6 md:px-8 py-8 md:py-12">
+
+      <!-- Service items container -->
+      <div id="servicesContainer" class="space-y-8 md:space-y-12">
+        <!-- Dynamically filled with JavaScript -->
+      </div>
+
+      <!-- Load more button -->
+      <div class="text-center mt-8 md:mt-10">
+        <button id="loadMoreBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 md:py-3 md:px-8 rounded-lg shadow-md transition-all duration-300 text-xs md:text-base hover:shadow-xl transform hover:-translate-y-0.5">
+          Show All Services
+        </button>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-6 px-4 text-center text-xs md:text-sm">
+      <p>© 2026 Company Services. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <div class="lightbox-content">
+      <button id="closeLightbox" class="close-lightbox" aria-label="Close">✕</button>
+      <img id="lightboxImg" src="" alt="service image full view">
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      // Service data: 10 items with image URLs (from picsum) and descriptions
+      const services = [
+        {
+          title: 'Brand Strategy',
+          short: 'We craft brand identities that resonate. Our team develops positioning, messaging, and visual language to make your brand unforgettable.',
+          extra: 'Through in‑depth market research and competitor analysis, we define a unique brand voice that aligns with your business goals. Deliverables include brand guidelines, logo systems, and full identity packages.',
+          img: 'https://picsum.photos/id/20/600/400',
+        },
+        {
+          title: 'UX/UI Design',
+          short: 'Human‑centered design that delights users. We create intuitive interfaces and seamless experiences across web and mobile.',
+          extra: 'From wireframes to high‑fidelity prototypes, our iterative process ensures usability and aesthetic harmony. We conduct user testing to refine every interaction.',
+          img: 'https://picsum.photos/id/40/600/400',
+        },
+        {
+          title: 'Web Development',
+          short: 'Robust, scalable websites and apps built with modern technologies. We focus on performance, accessibility, and clean code.',
+          extra: 'Our stack includes React, Node.js, and Tailwind CSS. We deliver responsive, SEO‑friendly solutions with continuous integration and deployment pipelines.',
+          img: 'https://picsum.photos/id/60/600/400',
+        },
+        {
+          title: 'Mobile Apps',
+          short: 'Native and cross‑platform mobile applications that engage users on iOS and Android.',
+          extra: 'Using Swift, Kotlin, or Flutter, we build apps with smooth animations, offline capabilities, and push notifications. App Store optimization included.',
+          img: 'https://picsum.photos/id/80/600/400',
+        },
+        {
+          title: 'E‑commerce Solutions',
+          short: 'Custom online stores that drive sales. We integrate payment gateways, inventory, and user‑friendly product management.',
+          extra: 'Platforms like Shopify, WooCommerce, or headless commerce. We optimize conversion funnels and implement analytics for data‑driven growth.',
+          img: 'https://picsum.photos/id/100/600/400',
+        },
+        {
+          title: 'SEO & Analytics',
+          short: 'Improve your visibility with on‑page SEO, technical audits, and data analysis to grow organic traffic.',
+          extra: 'We use tools like Google Analytics, Search Console, and Ahrefs. Regular reporting and keyword strategy sessions keep you ahead of competitors.',
+          img: 'https://picsum.photos/id/120/600/400',
+        },
+        {
+          title: 'Content Marketing',
+          short: 'Engaging content that tells your story. From blog posts to video scripts, we create narratives that convert.',
+          extra: 'Our content strategists develop editorial calendars, SEO‑optimized articles, and multimedia content tailored to your audience personas.',
+          img: 'https://picsum.photos/id/140/600/400',
+        },
+        {
+          title: 'Cloud Infrastructure',
+          short: 'Secure, scalable cloud architecture using AWS, Azure, or GCP. We handle migration, DevOps, and monitoring.',
+          extra: 'We implement CI/CD pipelines, containerization with Docker/Kubernetes, and auto‑scaling to ensure 99.9% uptime.',
+          img: 'https://picsum.photos/id/160/600/400',
+        },
+        {
+          title: 'Cybersecurity',
+          short: 'Protect your digital assets with penetration testing, vulnerability assessments, and compliance audits.',
+          extra: 'We offer firewall configuration, endpoint protection, and employee training to build a security‑first culture.',
+          img: 'https://picsum.photos/id/180/600/400',
+        },
+        {
+          title: 'AI & Machine Learning',
+          short: 'Leverage data with custom AI models, natural language processing, and predictive analytics.',
+          extra: 'From chatbots to recommendation engines, we deploy ML solutions that automate decisions and uncover insights.',
+          img: 'https://picsum.photos/id/200/600/400',
+        }
+      ];
+
+      const container = document.getElementById('servicesContainer');
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const closeLightbox = document.getElementById('closeLightbox');
+      const body = document.body;
+
+      let allServicesRendered = false;
+
+      // Function to create a service row HTML
+      function createServiceRow(service, index) {
+        // Alternate image left/right for larger screens using order classes
+        const isEven = index % 2 === 0;
+        const imageOrder = isEven ? 'md:order-1' : 'md:order-2';
+        const textOrder = isEven ? 'md:order-2' : 'md:order-1';
+
+        return `
+          <div class="service-row flex flex-col md:flex-row items-center bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+            <!-- Image side -->
+            <div class="w-full md:w-1/2 h-48 xs:h-56 sm-custom:h-64 md:h-72 ${imageOrder} overflow-hidden">
+              <img 
+                src="${service.img}" 
+                alt="${service.title}" 
+                class="service-image w-full h-full object-cover rounded-t-xl md:rounded-none md:rounded-l-xl"
+                loading="lazy"
+                data-full-img="${service.img}"
+                onclick="openLightbox('${service.img}')"
+              >
+            </div>
+            <!-- Text side -->
+            <div class="w-full md:w-1/2 p-4 xs:p-5 md:p-6 ${textOrder} flex flex-col justify-center">
+              <h3 class="service-title text-base xs:text-lg sm-custom:text-xl md:text-2xl font-bold text-gray-800 mb-2">${service.title}</h3>
+              <p class="service-desc text-xs xs:text-sm md:text-base text-gray-600 leading-relaxed">${service.short}</p>
+              <div class="extra-text mt-2" id="extra-${index}">
+                <p class="text-xs xs:text-sm md:text-base text-gray-500 leading-relaxed">${service.extra}</p>
+              </div>
+              <button 
+                class="read-more-btn mt-3 text-blue-600 hover:text-blue-800 font-medium text-xs md:text-sm self-start flex items-center gap-1 transition"
+                data-index="${index}"
+                aria-expanded="false"
+              >
+                <span class="btn-text">Read More</span>
+                <svg class="w-3 h-3 md:w-4 md:h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      // Render only first 4 services initially
+      function renderInitial() {
+        container.innerHTML = '';
+        const count = Math.min(4, services.length);
+        for (let i = 0; i < count; i++) {
+          container.innerHTML += createServiceRow(services[i], i);
+        }
+        attachReadMoreListeners();
+        // If total services <=4, hide the load more button
+        if (services.length <= 4) {
+          loadMoreBtn.style.display = 'none';
+          allServicesRendered = true;
+        }
+      }
+
+      // Render all services
+      function renderAll() {
+        container.innerHTML = '';
+        services.forEach((service, i) => {
+          container.innerHTML += createServiceRow(service, i);
+        });
+        attachReadMoreListeners();
+        allServicesRendered = true;
+        loadMoreBtn.style.display = 'none';
+        // Scroll slightly to show more content
+        document.getElementById('services').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // Attach event listeners to "Read More" buttons
+      function attachReadMoreListeners() {
+        document.querySelectorAll('.read-more-btn').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            const index = this.getAttribute('data-index');
+            const extraDiv = document.getElementById(`extra-${index}`);
+            const icon = this.querySelector('svg');
+            const textSpan = this.querySelector('.btn-text');
+            const expanded = extraDiv.classList.contains('expanded');
+
+            if (expanded) {
+              extraDiv.classList.remove('expanded');
+              icon.style.transform = 'rotate(0deg)';
+              textSpan.textContent = 'Read More';
+              this.setAttribute('aria-expanded', 'false');
+            } else {
+              extraDiv.classList.add('expanded');
+              icon.style.transform = 'rotate(180deg)';
+              textSpan.textContent = 'Read Less';
+              this.setAttribute('aria-expanded', 'true');
+            }
+          });
+        });
+      }
+
+      // Lightbox functions
+      window.openLightbox = function(imgSrc) {
+        lightboxImg.src = imgSrc;
+        lightbox.classList.add('active');
+        lightbox.setAttribute('aria-hidden', 'false');
+        body.classList.add('modal-open');
+      };
+
+      function closeLightboxFunc() {
+        lightbox.classList.remove('active');
+        lightbox.setAttribute('aria-hidden', 'true');
+        body.classList.remove('modal-open');
+      }
+
+      closeLightbox.addEventListener('click', closeLightboxFunc);
+      lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) closeLightboxFunc();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          closeLightboxFunc();
+        }
+      });
+
+      // Load more button action
+      loadMoreBtn.addEventListener('click', renderAll);
+
+      // Initial render
+      renderInitial();
+
+      // Re-attach listeners on window resize? Not needed, but just in case we can re-render on breakpoint changes? No.
+
+      // Adjust if images fail to load
+      document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', function() {
+          this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="400"%3E%3Crect fill="%23e2e8f0" width="600" height="400"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%2394a3b8" font-size="24"%3EImage%3C/text%3E%3C/svg%3E';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
