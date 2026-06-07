@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCIZ</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'montserrat': ['Montserrat', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'sm': '1px',
+                        'md': '1px',
+                        'lg': '1px',
+                        'xl': '1px',
+                        '2xl': '1px',
+                        '3xl': '1px',
+                        'full': '1px',
+                    },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #066be7;
+            --accent: #034095;
+            --gold: #0a68ff;
+            --dark: #02021a;
+            --light: #0658ca;
+            --white: #ffffff;
+            --texture: #ffffff;
+        }
+        * {
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 1px !important;
+        }
+        body {
+            background-color: var(--white);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 1px; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 1px; }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.4s ease;
+            padding: 1.5rem 2rem;
+            background: transparent;
+        }
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0.8rem 2rem;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            
+        }
+        
+        .navbar .logo { color: #fff; font-weight: 800; font-size: 1.6rem; letter-spacing: 2px; text-transform: uppercase; transition: all 0.3s ease; }
+        .navbar.scrolled .logo { font-size: 1.3rem; }
+        .navbar .logo span { color: var(--accent); }
+        .nav-link {
+            color: #021c32;
+            font-weight: 500;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            padding: 0.5rem 0;
+        }
+        .nav-link:hover { color: var(--gold); }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(13,13,26,0.98);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: all 0.35s ease;
+            border: 1px solid rgba(0, 123, 255, 0.3);
+            border-radius: 1px !important;
+            padding: 0.5rem 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-menu a { display: block; padding: 0.7rem 1.5rem; color: #ddd; font-size: 0.85rem; letter-spacing: 0.5px; transition: all 0.3s ease; }
+        .dropdown-menu a:hover { background: rgba(0, 123, 255, 0.893); color: var(--white); padding-left: 2rem; }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 350px;
+            height: 100vh;
+            background: rgba(13,13,26,0.98);
+            z-index: 2000;
+            transition: right 0.4s ease;
+            padding: 2rem;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+        }
+        .mobile-menu.active { right: 0; }
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+        .mobile-overlay.active { opacity: 1; visibility: visible; }
+        .mobile-menu a { display: block; color: #fff; padding: 0.8rem 0; font-size: 1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; }
+        .mobile-menu a:hover { color: var(--accent); padding-left: 0.8rem; }
+        .mobile-menu .sub-links { padding-left: 1.5rem; }
+        .mobile-menu .sub-links a { font-size: 0.85rem; padding: 0.5rem 0; }
+
+        .hamburger { cursor: pointer; z-index: 2001; position: relative; width: 30px; height: 22px; }
+        .hamburger span { display: block; width: 100%; height: 2px; background: #000212; margin: 5px 0; transition: all 0.3s ease; border-radius: 1px; }
+        .hamburger.active span:nth-child(1) { transform: rotate(90deg) translate(5px,5px); }
+        .hamburger.active span:nth-child(2) { transform: rotate(90deg) translate(5px,5px); }
+        .hamburger.active span:nth-child(3) { transform: rotate(90deg) translate(5px,5px); }
+
+        /* Hero */
+        .hero-slider { position: relative; width: 100%; height: 100vh; overflow: hidden; }
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transform: scale(1.50);
+            transition: all 1.2s cubic-bezier(0.25,0.46,0.45,0.94);
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+        }
+        .hero-slide.active { opacity: 1; transform: scale(1); z-index: 2; }
+        .hero-overlay {
+            position: absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background: linear-gradient(to bottom, rgba(13, 13, 26, 0) 0%, rgba(13, 13, 26, 0) 50%, rgba(13, 13, 26, 0) 100%);
+            z-index: 3;
+        }
+        .hero-content {
+            position: relative;
+            z-index:4;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            height:100%;
+            text-align:center;
+            padding:0 2rem;
+        }
+        .hero-content h1 { font-size: 0.5rem; font-weight:800; letter-spacing:1px; color:#fff; text-transform:uppercase; }
+        .hero-content h1 span { color:var(--white);}
+        .hero-dots {
+            position:absolute;
+            bottom:3rem;
+            left:50%;
+            transform:translateX(-50%);
+            z-index:5;
+            display:flex;
+            gap:0.8rem;
+        }
+        .hero-dot {
+            width:10px;
+            height:10px;
+            border-radius:50%;
+            background:var(--accent);
+            cursor:pointer;
+            transition:all 0.4s ease;
+            border:1px solid var(--accent);
+        }
+        .hero-dot.active { background:var(--accent); width:30px; border-radius:5px; }
+
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight:700;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            color:var(--dark);
+            position:relative;
+            display:inline-block;
+            text-align:center;
+        }
+        .section-title::after {
+            content:'';
+            position:absolute;
+            bottom:-10px;
+            left:50%;
+            transform:translateX(-50%);
+            width:60px;
+            height:3px;
+            background:var(--accent);
+        }
+        .section-subtitle { color:var(--accent); letter-spacing:3px; font-weight:500; font-size:0.9rem; text-transform:uppercase; }
+
+        .btn-primary {
+            background:var(--accent);
+            color:#fff;
+            padding:0.9rem 2.5rem;
+            font-weight:600;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            font-size:0.85rem;
+            transition:all 0.35s ease;
+            display:inline-block;
+            cursor:pointer;
+            border:2px solid var(--accent);
+        }
+        .btn-primary:hover { background:transparent; color:var(--accent); transform:translateY(-3px); box-shadow:0 10px 25px rgba(201,169,110,0.3); }
+        .btn-outline {
+            background:transparent;
+            color:#fff;
+            padding:0.9rem 2.5rem;
+            font-weight:600;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            font-size:0.85rem;
+            transition:all 0.35s ease;
+            display:inline-block;
+            cursor:pointer;
+            border:2px solid #fff;
+        }
+        .btn-outline:hover { background:#fff; color:var(--dark); transform:translateY(-3px); box-shadow:0 10px 25px rgba(255,255,255,0.2); }
+        .btn-dark {
+            background:var(--dark);
+            color:#fff;
+            padding:0.9rem 2.5rem;
+            font-weight:600;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            font-size:0.85rem;
+            transition:all 0.35s ease;
+            display:inline-block;
+            cursor:pointer;
+            border:2px solid var(--dark);
+        }
+        .btn-dark:hover { background:transparent; color:var(--dark); transform:translateY(-3px); box-shadow:0 10px 25px rgba(26,26,46,0.2); }
+
+        /* Product Carousel */
+        .product-carousel { position:relative; overflow:hidden; }
+        .product-track { display:flex; transition:transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .product-card {
+            flex:0 0 calc(33.333% - 1.5rem);
+            margin:0 0.75rem;
+            background:#fff;
+            box-shadow:0 5px 25px rgba(0,0,0,0.06);
+            transition:all 0.4s ease;
+            overflow:hidden;
+        }
+        .product-card:hover { transform:translateY(-8px); box-shadow:0 20px 40px rgba(0,0,0,0.12); }
+        .product-card img { width:100%; height:320px; object-fit:cover; transition:transform 0.5s ease; }
+        .product-card:hover img { transform:scale(1.05); }
+        .carousel-nav {
+            position:absolute;
+            top:50%;
+            transform:translateY(-50%);
+            background:var(--accent);
+            color:#fff;
+            width:45px;
+            height:45px;
+            border:none;
+            cursor:pointer;
+            font-size:1.2rem;
+            z-index:10;
+            transition:all 0.3s ease;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .carousel-nav:hover { background:var(--dark); transform:translateY(-50%) scale(1.08); }
+        .carousel-prev { left:10px; }
+        .carousel-next { right:10px; }
+
+        /* Smooth Sliders Common */
+        .smooth-slider-container { position: relative; overflow: hidden; }
+        .smooth-slider-track { display: flex; transition: transform 0.7s ease-in-out; }
+        .smooth-slide { min-width: 100%; }
+        .smooth-slide img { width: 100%; height: 600px; object-fit: cover; }
+
+        /* Gallery */
+        .gallery-item { position:relative; overflow:hidden; cursor:pointer; }
+        .gallery-item img { width:100%; height:340px; object-fit:cover; transition:transform 0.5s ease; }
+        .gallery-item:hover img { transform:scale(1.08); }
+        .gallery-overlay {
+            position:absolute;
+            bottom:0;
+            left:0;
+            right:0;
+            background:linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+            padding:1.5rem;
+            color:#fff;
+            transform:translateY(30%);
+            transition:transform 0.4s ease;
+        }
+        .gallery-item:hover .gallery-overlay { transform:translateY(0); }
+
+        /* Testimonials */
+        .testimonial-card {
+            background:#fff;
+            padding:2.5rem;
+            box-shadow:0 5px 25px rgba(0,0,0,0.05);
+            transition:all 0.5s ease;
+            border-left:3px solid transparent;
+            cursor:pointer;
+            position: relative;
+        }
+        .testimonial-card:hover {
+            background:#fdfaf5;
+            border-left-color:var(--accent);
+            box-shadow:0 15px 40px rgba(201,169,110,0.15);
+            transform:translateY(-5px);
+        }
+        .testimonial-card:hover .testimonial-quote { color:var(--accent); }
+        .testimonial-card::after {
+            content:'';
+            position:absolute;
+            bottom:0;
+            left:0;
+            width:0;
+            height:3px;
+            background:var(--accent);
+            transition:width 0.5s ease;
+        }
+        .testimonial-card:hover::after { width:100%; }
+        .testimonial-quote { transition:color 0.5s ease; color:#999; font-size:2rem; }
+
+        /* Core Values */
+        .core-value-item { text-align:center; padding:2rem; transition:all 0.4s ease; }
+        .core-value-number { font-size:3.5rem; font-weight:800; color:var(--accent); letter-spacing:1px; transition:all 0.3s ease; }
+        .core-value-item:hover .core-value-number { transform:scale(1.1); }
+
+        .marquee-container { overflow:hidden; white-space:nowrap; padding:1.5rem 0; background:#fff; }
+        .marquee-track { display:inline-flex; animation:marquee 20s linear infinite; }
+        .marquee-track img { height:120px; margin:0 2rem; object-fit:contain; filter:grayscale(30%); transition:filter 0.3s ease; }
+        .marquee-track img:hover { filter:grayscale(0%); }
+        @keyframes marquee { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+
+        /* Modals */
+        .modal-overlay {
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,0.7);
+            z-index:3000;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            opacity:0;
+            visibility:hidden;
+            transition:all 0.4s ease;
+        }
+        .modal-overlay.active { opacity:1; visibility:visible; }
+        .modal-box {
+            background:#fff;
+            max-width:500px;
+            width:90%;
+            padding:0.2rem;
+            text-align:center;
+            position: relative;
+            box-shadow:0 30px 60px rgba(0,0,0,0.4);
+            animation:modalIn 0.5s ease;
+        }
+        @keyframes modalIn { from {transform:scale(0.8) translateY(-40px); opacity:0;} to {transform:scale(1) translateY(0); opacity:1;} }
+        .modal-close {
+            position:absolute;
+            top:10px;
+            right:15px;
+            font-size:1.5rem;
+            cursor:pointer;
+            color:#000000;
+            transition:color 0.3s ease;
+            background:none;
+            border:none;
+        }
+        .modal-close:hover { color:var(--dark); }
+
+        .success-toast {
+            position:fixed;
+            top:30px;
+            right:-400px;
+            background:#2d6a4f;
+            color:#fff;
+            padding:1.2rem 2rem;
+            z-index:4000;
+            font-weight:500;
+            letter-spacing:1px;
+            transition:right 0.5s cubic-bezier(0.68,-0.55,0.27,1.55);
+            box-shadow:0 10px 30px rgba(0,0,0,0.3);
+        }
+        .success-toast.show { right:30px; }
+
+        /* WhatsApp */
+        .whatsapp-float {
+            position:fixed;
+            bottom:30px;
+            right:30px;
+            z-index:2500;
+            background:#25D366;
+            color:#fff;
+            width:55px;
+            height:55px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:2rem;
+            box-shadow:0 8px 25px rgba(0,0,0,0.3);
+            transition:transform 0.3s ease;
+            cursor:pointer;
+        }
+        .whatsapp-float:hover { transform:scale(1.1); }
+
+        /* Feedback icon */
+        .feedback-float {
+            position:fixed;
+            bottom:100px;
+            right:30px;
+            z-index:2500;
+            background:var(--accent);
+            color:#fff;
+            width:55px;
+            height:55px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:1.5rem;
+            box-shadow:0 8px 25px rgba(0,0,0,0.3);
+            transition:transform 0.3s ease;
+            cursor:pointer;
+        }
+        .feedback-float:hover { transform:scale(1.1); }
+
+        /* Audio Float Button (Left Side) */
+        .audio-float {
+            position:fixed;
+            bottom:30px;
+            left:30px;
+            z-index:2500;
+            background:#1a1a2e;
+            color:#ffffff;
+            width:55px;
+            height:55px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:1.5rem;
+            box-shadow:0 8px 25px rgba(0, 0, 0, 0.079);
+            transition:transform 0.3s ease;
+            cursor:pointer;
+            margin-bottom: 60px;
+             margin-left: -10px;
+        }
+        .audio-float:hover { transform:scale(1.1); }
+
+        /* Audio Player Modal specific */
+        .audio-player-modal .carousel-nav {
+            position:static;
+            transform: none;
+            display: inline-flex;
+        }
+        /* Video Float Button (Right Side) */
+.video-float {
+    position: fixed;
+    bottom: 30px;
+    margin-bottom:150px ;
+    right: 0px;
+    margin-right: -35px;
+    z-index: 2500;
+    background: #f30303;
+    color: #ffffff;
+    width: 150px;
+    height: 150px;
+    border-radius: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+.video-float:hover { transform: scale(1.1); }
+
+/* Video Player Modal specific */
+.video-player-modal .carousel-nav {
+    position: static;
+    transform: none;
+    display: inline-flex;
+}
+.video-container {
+    position: relative;
+    background: #000;
+}
+.video-container video {
+    width: 100%;
+    display: block;
+}
+.video-controls-custom {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+}
+.seek-bar {
+    flex: 1;
+    height: 5px;
+    background: #555;
+    cursor: pointer;
+    position: relative;
+}
+.seek-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.1s linear;
+}
+.fullscreen-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.2rem;
+}
+
+/* Marquee seamless infinite loop fix */
+.marquee-container {
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 1.5rem 0;
+    background: #fff;
+}
+.marquee-track {
+    display: inline-flex;
+    animation: marquee 20s linear infinite;
+    width: max-content; /* prevent cutting */
+}
+.marquee-track img {
+    height: 120px;
+    margin: 0 2rem;
+    object-fit: contain;
+    filter: grayscale(30%);
+    transition: filter 0.3s ease;
+    flex-shrink: 0; /* important for consistent size */
+}
+.marquee-track img:hover { filter: grayscale(0%); }
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+        /* Responsive */
+        @media (max-width: 300px) {
+            .hero-content h1 { font-size: 1.2rem; letter-spacing: 1px; margin-top: 45px;; }
+            .section-title { font-size: 1.4rem; }
+            .btn-primary, .btn-outline, .btn-dark { padding: 0.5rem 1rem; font-size: 0.7rem; }
+            .navbar .logo { font-size: 1rem; }
+            
+            .product-card img { height: 180px; }
+            .hero-slider { height: 2vh; }
+            /* Minimal button size for very small screens */
+.btn-primary, .btn-outline, .btn-dark {
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+}
+
+#newsletterForm .btn-primary {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.7rem;
+}
+            
+            
+            
+            
+            .smooth-slide img { height: 100px; }
+            .whatsapp-float { width: 40px; height: 40px; font-size: 1.2rem; bottom: 15px; right: 15px; }
+            .feedback-float { width: 35px; height: 35px; font-size: 1rem; bottom: 70px; right: 15px; }
+            .audio-float { width: 35px; height: 35px; font-size: 1rem; bottom: 15px; left: 15px; }
+        }
+        @media (min-width: 1440px) {
+            .hero-content h1 { font-size: 5rem; }
+            .container { max-width: 1300px; }
+            .product-card { flex:0 0 calc(55% - 1.5rem); }
+            .section-title { font-size: 3rem; }
+            .hero-slider { height: 100vh; }
+            .smooth-slide img { height: 600px; }
+            .gallery-item img { height: 210px; }
+        }
+        @media (max-width: 480px) {
+         .hero-slider { height: 5vh; }
+            .hero-content h1 { font-size: 1.8rem; }
+            .product-card { flex:0 0 calc(100% - 1rem) !important; margin:0 0.5rem; }
+            .product-card img { height: 220px; }
+            .core-value-number { font-size: 2.2rem; }
+            .testimonial-card { padding: 1.5rem; }
+            .marquee-track img { height: 70px; margin: 0 1rem; }
+            .smooth-slide img { height: 350px; }
+            .whatsapp-float { width: 50px; height: 50px; font-size: 1.5rem; bottom: 20px; right: 20px; }
+            .feedback-float { width: 45px; height: 45px; font-size: 1.2rem; bottom: 90px; right: 20px; }
+            .audio-float { width: 45px; height: 45px; font-size: 1.2rem; bottom: 20px; left: 20px; }
+            /* Further reduce button padding */
+.btn-primary, .btn-outline, .btn-dark {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+/* Newsletter button specific */
+#newsletterForm .btn-primary {
+    padding: 0.6rem 1rem;
+    font-size: 0.75rem;
+}
+        }
+         @media (max-width: 400px) {
+            .hero-slider { height: 5vh; }
+            .hero-content h1 { font-size: 1.8rem; }
+            .product-card { flex:0 0 calc(100% - 1rem) !important; margin:0 0.5rem; }
+            .product-card img { height: 220px; }
+            .core-value-number { font-size: 2.2rem; }
+            .testimonial-card { padding: 1.5rem; }
+            .marquee-track img { height: 70px; margin: 0 1rem; }
+            .smooth-slide img { height: 100%; }
+            .video-float { width: 45px; height: 45px; font-size: 1.2rem; right: 70px; bottom: 20px; }
+
+ /* ===== DESCRIPTION BLOCK (image + text row) ===== */
+            .whatsapp-float { width: 50px; height: 50px; font-size: 1.5rem; bottom: 20px; right: 20px; }
+            .feedback-float { width: 45px; height: 45px; font-size: 1.2rem; bottom: 90px; right: 20px; }
+            .audio-float { width: 45px; height: 45px; font-size: 1.2rem; bottom: 20px; left: 20px; }
+        }
+        @media (max-width: 768px) {
+            /* Reduce button sizes globally for tablets */
+.btn-primary, .btn-outline, .btn-dark {
+    padding: 0.7rem 1.8rem;
+    font-size: 0.8rem;
+}
+
+/* Newsletter form - stack input and button if needed */
+#newsletterForm {
+    flex-direction: column;
+    gap: 0.5rem;
+}
+#newsletterForm input {
+    width: 100%;
+}
+#newsletterForm .btn-primary {
+    width: 100%;
+    text-align: center;
+    padding: 0.7rem 1rem;
+}
+            .product-card { flex:0 0 calc(50% - 1rem); }
+            .gallery-item img { height: 240px; }
+            .smooth-slide img { height: 450px;  }
+             .hero-slider { height: 48vh;margin-top: 100px; }
+            .hero-content h1 { font-size: 1.8rem; }
+            .product-card img { height: 220px; }
+            .core-value-number { font-size: 2.2rem; }
+            .testimonial-card { padding: 1.5rem; }
+            .marquee-track img { height: 70px; margin: 0 1rem; }
+            .video-float {
+    position: fixed;
+    bottom: 30px;
+    margin-bottom:120px ;
+    right: 0px;
+    margin-right: -50px;
+    z-index: 2500;
+    background: #f30303;
+    color: #ffffff;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+            
+            .whatsapp-float { width: 50px; height: 50px; font-size: 1.5rem; bottom: 20px; right: 20px; }
+            .feedback-float { width: 45px; height: 45px; font-size: 1.2rem; bottom: 90px; right: 20px; }
+            .audio-float { width: 45px; height: 45px; font-size: 1.2rem; bottom: 20px; left: 20px; }
+        
+        }
+      /* Inside @media (max-width: 300px) */
+.video-float { width: 35px; height: 35px; font-size: 1rem; right: 60px; bottom: 15px; }
+
+/* Inside @media (max-width: 480px) */
+.video-float { width: 45px; height: 45px; font-size: 1.2rem; right: 70px; bottom: 20px; }
+
+ /* ===== DESCRIPTION BLOCK (image + text row) ===== */
+        .mika-description-block {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            margin-bottom: 80px;
+            flex-wrap: wrap;
+            margin: 5px;
+        }
+        .mika-description-block:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Alternate image position */
+        .mika-description-block.mika-block-reverse {
+            flex-direction: row-reverse;
+        }
+
+        .mika-description-image {
+            flex: 1 1 45%;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+        }
+        .mika-description-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            display: block;
+        }
+
+        .mika-description-image:hover img {
+            transform: scale(1.03);
+        }
+
+        .mika-description-text {
+            flex: 1 1 45%;
+        }
+        .mika-text-title {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 18px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+        .mika-text-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #0e69b3;
+        }
+        .mika-description-text p {
+            font-size: 1.1rem;
+            color: #000000;
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .mika-signature {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #0055e7;
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+        /* ===== RESPONSIVE: 680px and below ===== */
+        @media (max-width: 680px) {
+            .mika-refined-section {
+                padding: 60px 0;
+            }
+            .mika-section-heading {
+                font-size: 2.2rem;
+                margin-bottom: 50px;
+            }
+            .mika-description-block {
+                gap: 30px;
+                margin-bottom: 60px;
+            }
+            .mika-description-block.mika-block-reverse {
+                flex-direction: column; /* stack image on top, text below */
+            }
+            .mika-description-image {
+                flex: 1 1 100%;
+            }
+            .mika-description-text {
+                flex: 1 1 100%;
+            }
+            .mika-text-title {
+                font-size: 1.8rem;
+            }
+            .mika-description-text p {
+                font-size: 1rem;
+            }
+            .mika-signature {
+                font-size: 1.1rem;
+            }
+        }
+        /* ===== RESPONSIVE: 480px and below ===== */
+        @media (max-width: 480px) {
+            .mika-refined-section {
+                padding: 50px 0;
+            }
+            .mika-section-inner {
+                padding: 0 16px;
+            }
+            .mika-section-heading {
+                font-size: 1.8rem;
+                margin-bottom: 40px;
+            }
+            .mika-section-heading::after {
+                width: 60px;
+            }
+            .mika-description-block {
+                gap: 24px;
+                margin-bottom: 50px;
+            }
+            .mika-text-title {
+                font-size: 1.6rem;
+            }
+            .mika-description-text p {
+                font-size: 0.95rem;
+                line-height: 1.7;
+            }
+            .mika-signature {
+                font-size: 1rem;
+                margin-top: 14px;
+            }
+            .mika-description-image {
+                border-radius: 3px;
+            }
+        }
+        /* ===== RESPONSIVE: below 360px (very small phones) ===== */
+        @media (max-width: 359px) {
+            .mika-refined-section {
+                padding: 40px 0;
+            }
+            .mika-section-inner {
+                padding: 0 12px;
+            }
+            .mika-section-heading {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+                padding-bottom: 14px;
+            }
+            .mika-section-heading::after {
+                width: 50px;
+                height: 2px;
+            }
+            .mika-description-block {
+                gap: 18px;
+                margin-bottom: 40px;
+            }
+            .mika-text-title {
+                font-size: 1.3rem;
+                padding-bottom: 8px;
+                margin-bottom: 12px;
+            }
+            .mika-text-title::after {
+                width: 40px;
+            }
+            .mika-description-text p {
+                font-size: 0.85rem;
+                line-height: 1.6;
+            }
+            .mika-signature {
+                font-size: 0.9rem;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <a href="#" class="logo"><img src="united chemolidelogo.png" style="width: 150px; height: 70px;"></a>
+            <div class="hidden lg:flex items-center gap-5">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <div class="dropdown relative">
+                    <a href="#services" class="nav-link flex items-center gap-1">Products <i class="fas fa-chevron-down text-xs"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="#services">Kabulonga</a>
+                        <a href="#services">Jesmondine</a>
+                        <a href="#services">Chamba-valley</a>
+                        <a href="#services">Convention Center</a>
+                    </div>
+                </div>
+                <a href="#products" class="nav-link">Rooms</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#contact-section" class="nav-link">Contact</a>
+                <a href="Check availability.html" class="btn-dark">Book</a>
+               
+            </div>
+            <div class="hamburger lg:hidden" id="hamburger"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#home" class="mobile-nav-link">Home</a>
+        <a href="#about" class="mobile-nav-link">About</a>
+        <a href="#services" class="mobile-nav-link">Services</a>
+        <div class="sub-links"><a href="#services">Luxury Rooms</a><a href="#services">Dining</a><a href="#services">Spa</a></div>
+        <a href="#products" class="mobile-nav-link">Rooms</a>
+        <a href="#gallery" class="mobile-nav-link">Gallery</a>
+        
+        <a href="#contact-section" class="mobile-nav-link">Contact</a>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero-slider" id="home">
+        <div class="hero-slide active" style="background-image: url('UCIZsolar.png');"></div>
+        <div class="hero-slide" style="background-image: url('UCIZsolar1.png');"></div>
+        <div class="hero-slide" style="background-image: url('UCIZsolar2.png');"></div>
+        <div class="hero-slide" style="background-image: url('UCIZsolar3.png');"></div>
+        <div class="hero-slide" style="background-image: url('UCIZsolar.png');"></div>
+        <div class="hero-slide" style="background-image: url('UCIZsolar1.png');"></div>
+        <div class="hero-slide" style="background-image: url('UCIZsolar2.png');"></div>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-dots" id="heroDots"></div>
+    </section>
+
+    <!-- About -->
+    <section class="section-cream py-20 lg:py-28 px-4" id="about">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="section-subtitle mb-2">Discover Our Story</p>
+            <h2 class="section-title mb-16">About Mika Hotels</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center text-left">
+                <div><img src="images web1.jpg" alt="Lobby" class="w-full h-[400px] object-cover shadow-lg" loading="lazy"></div>
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">A Legacy of Hospitality Excellence</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">Nestled in the heart of breathtaking destinations, Mika Hotels stands as a beacon of refined luxury and warm hospitality. Since our inception, we have dedicated ourselves to creating unforgettable experiences.</p>
+                    <p class="text-gray-600 leading-relaxed mb-6">From elegantly appointed rooms to world-class dining and rejuvenating spa treatments, every detail is thoughtfully curated to exceed your expectations.</p>
+                    <a href="#contact-section" class="btn-dark">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+     <!-- Block 1 – Original image + main description -->
+            <div class="mika-description-block">
+                <div class="mika-description-image">
+                    <img src="EMH.jpg" alt="Luxurious suite interior with a city view">
+                </div>
+                <div class="mika-description-text">                    <h3 class="mika-text-title">Indoor and Outdoor Events</h3>
+                    <p>
+                        Looking to host an unforgettable event in 2026? 🥂 Whether you're searching for the perfect wedding 
+                        venue near me or a vibrant space for your next birthday party, our stunning location offers the flexibility
+                        and style you need to celebrate in luxury.
+                        From intimate gatherings to grand receptions, we provide the ultimate backdrop for every milestone. Take advantage
+                        of our 2026 early bird booking rates and lock in the best prices for your special date!
+                    </p>
+                    <p class="mika-signature">— Thee Mika Events</p>
+                </div>
+            </div>
+
+            <!-- Block 2 – New image and paragraph (right image, left text) -->
+            <div class="mika-description-block mika-block-reverse">
+                <div class="mika-description-image">
+                    <img src="IMG_7750.jpg" alt="Elegant marble bathroom with freestanding tub">
+                </div>
+                <div class="mika-description-text">
+                    <h3 class="mika-text-title">Mika Gym‑Keep Fit</h3>
+                    <p>Ready to crush your 2026 fitness goals? 🏋️‍♂️ Whether you’re 
+                      looking for a gym near me to kickstart your journey or elite
+                       strength training to level up, we’ve got you covered! Join the 
+                       most advanced fitness community of 2026 featuring High Advanced equipment, expert personal trainers, and high-energy HIIT classes
+                       in Lusaka,Zambia. Our Best Gym Trainers ready to give it all at our best prices with Good facilities.
+                    </p>
+                    <p class="mika-signature">— Best Gym</p>
+                </div>
+            </div>
+
+            <!-- Block 3 – New image and paragraph (left image, right text) -->
+            <div class="mika-description-block">
+                <div class="mika-description-image">
+                    <img src="mcc-33.jpg" alt="Michelin-star restaurant dining room with candlelit tables">
+                </div>
+                <div class="mika-description-text">
+                    <h3 class="mika-text-title">Ready To serve You!</h3><p>
+                         Elevate your next event with the best catering services in town! 🍽️ Whether you're planning a dream wedding, 
+                         a corporate gala, or an intimate backyard bash, we bring gourmet flavors and five-star service directly to your table.
+                          As a premier event caterer, we specialize in diverse menus that cater to every palate, offering everything from elegant
+                          plated dinners to trendy live cooking stations and artisanal buffets.
+                    </p>
+                    <p class="mika-signature">— A Table mastered by us-Ready Serve you!</p>
+                </div>
+            </div>
+
+            <!-- Block 4 – New image and paragraph (right image, left text) -->
+            <div class="mika-description-block mika-block-reverse">
+                <div class="mika-description-image">
+                    <img src="DSC05592.jpg" alt="Rooftop infinity pool overlooking the city at sunset">
+                </div>
+                <div class="mika-description-text">
+                    <h3 class="mika-text-title">Relaxation</h3>
+                    <p>Elevate your day & nights at the city’s premier luxury Mika lounge, where sophisticated vibes meet world-class mixology. 🍸 Whether you’re looking for a cocktail bar near me to unwind after work or the perfect upscale spot for a weekend night out, our lounge offers the ultimate atmosphere for total relaxation.
+Step into a world of plush seating, ambient lighting, and a curated soundtrack designed to help you disconnect from the hustle.
+✨ The Lounge Experience:
+🍹 Signature Cocktails: Expertly crafted drinks using premium spirits, house-made infusions, and fresh botanicals.
+🍷 Curated Wine List: A global selection of fine wines and rare vintages for the discerning palate.
+🛋️ Premium Comfort: Intimate booths and chic decor—perfect for deep conversations or a solo wind-down.
+🎶 Chill Vibes: Live acoustic sets and low-tempo beats to set the perfect mood.
+                    </p>
+                    <p class="mika-signature">— Elevated Serenity</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="section-white py-20 lg:py-28 px-4" id="services">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="section-subtitle mb-2">What We Offer</p>
+            <h2 class="section-title mb-16">Our Services</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="p-8 bg-gray-50 hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
+                    <i class="fas fa-bed text-5xl text-blue-800 mb-5 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-lg mb-3">Luxury Rooms</h4><p class="text-gray-600 text-sm">Elegantly designed rooms with premium amenities.</p>
+                </div>
+                <div class="p-8 bg-gray-50 hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
+                    <i class="fas fa-utensils text-5xl text-blue-800 mb-5 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-lg mb-3">Fine Dining</h4><p class="text-gray-600 text-sm">Exquisite culinary experiences.</p>
+                </div>
+                <div class="p-8 bg-gray-50 hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
+                    <i class="fas fa-spa text-5xl text-blue-800 mb-5 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-lg mb-3">Spa & Wellness</h4><p class="text-gray-600 text-sm">Rejuvenating treatments.</p>
+                </div>
+                <div class="p-8 bg-gray-50 hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
+                    <i class="fas fa-concierge-bell text-5xl text-blue-800 mb-5 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-lg mb-3">Concierge</h4><p class="text-gray-600 text-sm">Personalized assistance.</p>
+                </div>
+                <div class="p-8 bg-gray-50 hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
+                    <i class="fas fa-swimming-pool text-5xl text-blue-800 mb-5 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-lg mb-3">Pool & Recreation</h4><p class="text-gray-600 text-sm">Stunning infinity pools.</p>
+                </div>
+                <div class="p-8 bg-gray-50 hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
+                    <i class="fas fa-wifi text-5xl text-blue-800 mb-5 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-lg mb-3">High-Speed WiFi</h4><p class="text-gray-600 text-sm">Complimentary throughout.</p>
+                </div>
+                <div class="p-8 bg-gray-50 hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
+                    <i class="fas fa-parking text-5xl text-blue-800 mb-5 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-lg mb-3">Valet Parking</h4><p class="text-gray-600 text-sm">Secure 24/7 surveillance.</p>
+                </div>
+                <div class="p-8 bg-gray-50 hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
+                    <i class="fas fa-plane-arrival text-5xl text-blue-800 mb-5 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-lg mb-3">Airport Transfer</h4><p class="text-gray-600 text-sm">Luxury seamless transfers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- Products Infinite Carousel -->
+    <section class="section-accent-bg py-20 lg:py-28 px-4" id="products">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="section-subtitle mb-2">Accommodations</p>
+            <h2 class="section-title mb-16">Our Rooms & Suites</h2>
+            <div class="product-carousel relative" id="productCarousel">
+                <button class="carousel-nav carousel-prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
+                <div class="product-track" id="productTrack"></div>
+                <button class="carousel-nav carousel-next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Smooth Auto Sliding -->
+    <section class="section-light py-20 lg:py-28 px-4" id="portfolio">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="section-subtitle mb-2">Our Showcase</p>
+            <h2 class="section-title mb-16">Portfolio</h2>
+            <div class="smooth-slider-container relative" id="portfolioSlider">
+                <button class="carousel-nav carousel-prev" id="portfolioPrev" style="left:10px;"><i class="fas fa-chevron-left"></i></button>
+                <div class="smooth-slider-track" id="portfolioTrack">
+                    <div class="smooth-slide"><img src="EMH.jpg" alt="Portfolio 1" loading="lazy"></div>
+                    <div class="smooth-slide"><img src="EMH-52.jpg" alt="Portfolio 2" loading="lazy"></div>
+                    <div class="smooth-slide"><img src="CVEH-2.jpg" alt="Portfolio 3" loading="lazy"></div>
+                    <div class="smooth-slide"><img src="DOX_4434.jpg" alt="Portfolio 4" loading="lazy"></div>
+                </div>
+                <button class="carousel-nav carousel-next" id="portfolioNext" style="right:10px;"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section Smooth Auto Sliding -->
+    <section class="section-white py-20 lg:py-28 px-4" id="news">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="section-subtitle mb-2">Latest Updates</p>
+            <h2 class="section-title mb-16">News & Events</h2>
+            <div class="smooth-slider-container relative" id="newsSlider">
+                <button class="carousel-nav carousel-prev" id="newsPrev" style="left:10px;"><i class="fas fa-chevron-left"></i></button>
+                <div class="smooth-slider-track" id="newsTrack">
+                    <div class="smooth-slide"><img src="radio.jpg" alt="News 1" loading="lazy"></div>
+                    <div class="smooth-slide"><img src="marching labour.jpg" alt="News 2" loading="lazy"></div>
+                    <div class="smooth-slide"><img src="Mika_Hotel__Certificate_of_Recognition.jpg" alt="News 3" loading="lazy"></div>
+                    <div class="smooth-slide"><img src="award.jpg" alt="News 4" loading="lazy"></div>
+                    <div class="smooth-slide"><img src="conference.jpg" alt="News 5" loading="lazy"></div>
+                </div>
+                <button class="carousel-nav carousel-next" id="newsNext" style="right:10px;"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Showcase Slider Smooth Auto -->
+    <section class="section-cream py-20 lg:py-28 px-4" id="image-showcase">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="section-subtitle mb-2">Visual Journey</p>
+            <h2 class="section-title mb-16">Image Showcase</h2>
+            <div class="smooth-slider-container relative" id="showcaseSlider">
+                <button class="carousel-nav carousel-prev" id="showcasePrev" style="left:10px;"><i class="fas fa-chevron-left"></i></button>
+                <div class="smooth-slider-track" id="showcaseTrack">
+                    <div class="smooth-slide"><img src="J-13.jpg" alt="Showcase 1" loading="lazy"></div>
+                    <div class="smooth-slide"><img src="IMG_7787.jpg" alt="Showcase 2" loading="lazy"></div>
+                    <div class="smooth-slide"><img src="MCC009-6.jpg" alt="Showcase 3" loading="lazy"></div>
+                    <div class="smooth-slide"><img src="ML001-21.jpg" alt="Showcase 4" loading="lazy"></div>
+                </div>
+                <button class="carousel-nav carousel-next" id="showcaseNext" style="right:10px;"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery 8 Images -->
+    <section class="section-white py-20 lg:py-28 px-4" id="gallery">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="section-subtitle mb-2">Visual Journey</p>
+            <h2 class="section-title mb-16">Gallery</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="gallery-item"><img src="mcc-33.jpg" alt="Deluxe Room" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Deluxe Room</h5><p class="text-sm">Elegant comfort</p></div></div>
+                <div class="gallery-item"><img src="MMM_4648.jpg" alt="Presidential Suite" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Presidential Suite</h5><p class="text-sm">Ultimate luxury</p></div></div>
+                <div class="gallery-item"><img src="MMM_4703.jpg" alt="Ocean View" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Ocean View</h5><p class="text-sm">Breathtaking vistas</p></div></div>
+                <div class="gallery-item"><img src="_DOX6635.JPG" alt="Spa Suite" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Spa Suite</h5><p class="text-sm">Relaxation redefined</p></div></div>
+                <div class="gallery-item"><img src="CL001-3.jpg" alt="Pool Area" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Infinity Pool</h5><p class="text-sm">Serene waters</p></div></div>
+                <div class="gallery-item"><img src="EMH-42.jpg" alt="Restaurant" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Signature Restaurant</h5><p class="text-sm">Culinary excellence</p></div></div>
+                <div class="gallery-item"><img src="DOX_4540.jpg" alt="Lobby" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Grand Lobby</h5><p class="text-sm">Stunning entrance</p></div></div>
+                <div class="gallery-item"><img src="IMG_7750.jpg" alt="Terrace" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Rooftop Terrace</h5><p class="text-sm">Panoramic views</p></div></div>
+                <div class="gallery-item"><img src="mcc-33.jpg" alt="Deluxe Room" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Deluxe Room</h5><p class="text-sm">Elegant comfort</p></div></div>
+                <div class="gallery-item"><img src="MMM_4648.jpg" alt="Presidential Suite" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Presidential Suite</h5><p class="text-sm">Ultimate luxury</p></div></div>
+                <div class="gallery-item"><img src="MMM_4703.jpg" alt="Ocean View" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Ocean View</h5><p class="text-sm">Breathtaking vistas</p></div></div>
+                <div class="gallery-item"><img src="_DOX6635.JPG" alt="Spa Suite" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Spa Suite</h5><p class="text-sm">Relaxation redefined</p></div></div>
+                <div class="gallery-item"><img src="CL001-3.jpg" alt="Pool Area" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Infinity Pool</h5><p class="text-sm">Serene waters</p></div></div>
+                <div class="gallery-item"><img src="EMH-42.jpg" alt="Restaurant" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Signature Restaurant</h5><p class="text-sm">Culinary excellence</p></div></div>
+                <div class="gallery-item"><img src="DOX_4540.jpg" alt="Lobby" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Grand Lobby</h5><p class="text-sm">Stunning entrance</p></div></div>
+                <div class="gallery-item"><img src="IMG_7750.jpg" alt="Terrace" loading="lazy"><div class="gallery-overlay"><h5 class="font-bold">Rooftop Terrace</h5><p class="text-sm">Panoramic views</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="section-dark py-20 lg:py-28 px-4" id="core-values">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="section-subtitle mb-2" style="color:#000e23;">Our Foundation</p>
+            <h2 class="section-title mb-16" style="color:#000e23;">Core Values</h2>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="core-value-item"><div class="core-value-number" data-target="98" data-speed="80">0</div><span class="text-gray-800 text-xl">%</span><p class="text-gray-800 mt-3 text-sm uppercase tracking-wider">Guest Satisfaction</p></div>
+                <div class="core-value-item"><div class="core-value-number" data-target="100" data-speed="80">0</div><span class="text-gray-800 text-xl">%</span><p class="text-gray-800 mt-3 text-sm uppercase tracking-wider">Quality Standards</p></div>
+                <div class="core-value-item"><div class="core-value-number" data-target="95" data-speed="80">0</div><span class="text-gray-800 text-xl">%</span><p class="text-gray-800 mt-3 text-sm uppercase tracking-wider">Return Guests</p></div>
+                <div class="core-value-item"><div class="core-value-number" data-target="90" data-speed="80">0</div><span class="text-gray-800 text-xl">%</span><p class="text-gray-800 mt-3 text-sm uppercase tracking-wider">Sustainability</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials without images -->
+    <section class="section-cream py-20 lg:py-28 px-4" id="testimonials">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="section-subtitle mb-2">Guest Reviews</p>
+            <h2 class="section-title mb-16">Testimonials</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+                <div class="testimonial-card relative"><i class="fas fa-quote-left testimonial-quote mb-3"></i><p class="text-gray-600 text-sm leading-relaxed mb-4">"An absolutely stunning experience! The attention to detail is unmatched. Will definitely return."</p><div><h5 class="font-bold text-sm">Sarah Johnson</h5><p class="text-xs text-gray-500">Business Traveler</p></div></div>
+                <div class="testimonial-card relative"><i class="fas fa-quote-left testimonial-quote mb-3"></i><p class="text-gray-600 text-sm leading-relaxed mb-4">"The finest hotel I've ever stayed at. Spa treatments divine, dining exceptional."</p><div><h5 class="font-bold text-sm">Michael Chen</h5><p class="text-xs text-gray-500">Luxury Enthusiast</p></div></div>
+                <div class="testimonial-card relative"><i class="fas fa-quote-left testimonial-quote mb-3"></i><p class="text-gray-600 text-sm leading-relaxed mb-4">"Our honeymoon was pure magic. Every moment beautifully curated."</p><div><h5 class="font-bold text-sm">Emily Roberts</h5><p class="text-xs text-gray-500">Honeymooner</p></div></div>
+                <div class="testimonial-card relative"><i class="fas fa-quote-left testimonial-quote mb-3"></i><p class="text-gray-600 text-sm leading-relaxed mb-4">"Exceptional service from start to finish. Concierge went above and beyond."</p><div><h5 class="font-bold text-sm">David Thompson</h5><p class="text-xs text-gray-500">Family Vacationer</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map & Contact Row Group -->
+    <section class="flex flex-col lg:flex-row" id="contact-section">
+        <div class="lg:w-1/2 h-96 lg:h-[500px]">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3846.384054955227!2d28.350034974960156!3d-15.409809313602544!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19408c79568a1d79%3A0xe329dde7f7040a36!2sMika%20Hotel%20%7C%20Kabulonga!5e0!3m2!1sen!2szm!4v1769075019403!5m2!1sen!2szm" allowfullscreen="" loading="lazy" title="Location" class="w-full h-full border-0"></iframe>
+        </div>
+        <div class="lg:w-1/2 bg-gray-200 text-white p-8 lg:p-12 flex flex-col justify-center">
+            <h3 class="text-2xl font-bold mb-6" style="color:#000e23;">Get In Touch</h3>
+            <div class="space-y-4">
+                <div class="flex items-start gap-3"><i class="fas fa-map-marker-alt text-blue-950 mt-1"></i><p class="text-blue-950">123 Luxury Avenue, Paradise District, New York, NY 10001</p></div>
+                <div class="flex items-center gap-3"><i class="fas fa-phone text-blue-950"></i><p class="text-blue-950">+1 (555) 123-4567</p></div>
+                <div class="flex items-center gap-3"><i class="fas fa-envelope text-blue-950"></i><p class="text-blue-950">reservations@mikahotels.com</p></div>
+                <div class="flex items-center gap-3"><i class="fas fa-clock text-blue-950"></i><p class="text-blue-950">24/7 Reception</p></div>
+            </div>
+            <form id="contactForm" class="mt-6 space-y-3">
+                <input type="text" name="name" placeholder="Your Name" required class="w-full p-3 bg-transparent border border-gray-600 text-blue-950 placeholder-blue-950 focus:border-yellow-600 focus:outline-none text-sm">
+                <input type="email" name="email" placeholder="Your Email" required class="w-full p-3 bg-transparent border border-gray-600 text-blue-950 placeholder-blue-950 focus:border-yellow-600 focus:outline-none text-sm">
+                <textarea name="message" rows="3" placeholder="Your Message" required class="w-full p-3 bg-transparent border border-gray-600 text-blue-950 placeholder-blue-950focus:border-yellow-600 focus:outline-none text-sm"></textarea>
+                <button type="submit" class="btn-primary w-full text-center">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee-container">
+        <div class="marquee-track" id="marqueeTrack">
+            <img src="2.png" alt="Partner" loading="lazy">
+            <img src="3.png" alt="Partner" loading="lazy">
+            <img src="4.png" alt="Partner" loading="lazy">
+            <img src="Pool & Lounge Logo(1).png" alt="Partner" loading="lazy">
+            <img src="mika-eats-fc.png" alt="Partner" loading="lazy">
+            <img src="RED CAVE.png" alt="Partner" loading="lazy">
+            <img src="MIKA.png" alt="Partner" loading="lazy">
+            <img src="4.png" alt="Partner" loading="lazy">
+            <img src="2.png" alt="Partner" loading="lazy">
+            <img src="3.png" alt="Partner" loading="lazy">
+            <img src="4.png" alt="Partner" loading="lazy">
+            <img src="Pool & Lounge Logo(1).png" alt="Partner" loading="lazy">
+            <img src="mika-eats-fc.png" alt="Partner" loading="lazy">
+            <img src="RED CAVE.png" alt="Partner" loading="lazy">
+            <img src="MIKA.png" alt="Partner" loading="lazy">
+            <img src="4.png" alt="Partner" loading="lazy">
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-16 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+                <div><h4 class="text-lg font-bold mb-4" style="color:#ffffff;">Quick Links</h4>
+                    <div class="space-y-2"><a href="#home" class="block text-gray-100 hover:text-yellow-600 text-sm">Home</a><a href="#about" class="block text-gray-100 hover:text-yellow-600 text-sm">About</a><a href="#services" class="block text-gray-100 hover:text-yellow-600 text-sm">Services</a><a href="#products" class="block text-gray-100 hover:text-yellow-600 text-sm">Rooms</a><a href="#contact-section" class="block text-gray-100 hover:text-yellow-600 text-sm">Contact</a></div>
+                </div>
+                <div><h4 class="text-lg font-bold mb-4" style="color:#ffffff;">Services</h4>
+                    <div class="space-y-2"><a href="#rooms" class="block text-gray-100 hover:text-yellow-600 text-sm">Luxury Accommodation</a><a href="#about" class="block text-gray-100 hover:text-yellow-600 text-sm">Spa & Gym</a><a href="#services" class="block text-gray-100 hover:text-yellow-600 text-sm">Event & Functions</a><a href="#products" class="block text-gray-100 hover:text-yellow-600 text-sm">Conferencing</a><a href="#contact-section" class="block text-gray-100 hover:text-yellow-600 text-sm">Outside Catering</a></div>
+                </div>
+                <div><h4 class="text-lg font-bold mb-4" style="color:#ffffff;">Connect</h4>
+                    <div class="flex gap-4"><a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-600 hover:border-yellow-600 hover:text-yellow-600 text-gray-100"><i class="fab fa-facebook-f"></i></a><a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-600 hover:border-yellow-600 hover:text-yellow-600 text-gray-100"><i class="fab fa-instagram"></i></a><a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-600 hover:border-yellow-600 hover:text-yellow-600 text-gray-100"><i class="fab fa-x-twitter"></i></a><a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-600 hover:border-yellow-600 hover:text-yellow-600 text-gray-100"><i class="fab fa-linkedin-in"></i></a><a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-600 hover:border-yellow-600 hover:text-yellow-600 text-gray-100"><i class="fab fa-tripadvisor"></i></a></div>
+                </div>
+                <div><h4 class="text-lg font-bold mb-4" style="color:#ffffff;">Newsletter</h4>
+                    <p class="text-gray-400 text-sm mb-3">Stay updated with exclusive offers.</p>
+                    <form id="newsletterForm" class="flex gap-2"><input type="email" name="email" placeholder="Your email" required class="flex-1 p-3 bg-transparent border border-gray-600 text-white placeholder-gray-100 focus:border-yellow-600 text-sm"><button type="submit" class="btn-primary whitespace-nowrap px-4 hover:border-gray-100 hover:text-gray-100 text-gray-100">Subscribe</button></form>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-10 pt-8 text-center text-gray-100 text-sm"><p>&copy; 2026 Mika Hotels. All Rights Reserved.</p></div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/+260965170968?text=Hello%20Chat%20with%2C%20us%20need%20assistance?" target="_blank" class="whatsapp-float" title="Chat on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+
+    <!-- Feedback Float Button -->
+    <div class="feedback-float" id="feedbackFloat" title="Give Feedback"><i class="fas fa-comment-dots"></i></div>
+
+    <!-- Audio Float Button (Left Side) -->
+    <div class="audio-float" id="audioFloat" title="Listen to Relaxing Sounds"><i class="fas fa-music"></i></div>
+    <!-- Video Float Button (Right Side) -->
+<div class="video-float" id="videoFloat" title="Watch Hotel Tour">
+    <i class="fas fa-play"></i>
+</div>
+
+    <!-- Feedback Modal -->
+    <div class="modal-overlay" id="feedbackModal">
+        <div class="modal-box">
+            <button class="modal-close" id="closeFeedback">&times;</button>
+            <i class="fas fa-star text-5xl text-yellow-700 mb-4"></i>
+            <h3 class="text-2xl font-bold text-gray-800 mb-3">We Value Your Feedback</h3>
+            <form id="feedbackForm" class="space-y-3">
+                <input type="text" name="name" placeholder="Your Name" required class="w-full p-3 border border-gray-300 focus:border-yellow-600 text-sm">
+                <input type="email" name="email" placeholder="Your Email" required class="w-full p-3 border border-gray-300 focus:border-yellow-600 text-sm">
+                <textarea name="feedback" rows="3" placeholder="Your Feedback" required class="w-full p-3 border border-gray-300 focus:border-yellow-600 text-sm"></textarea>
+                <button type="submit" class="btn-dark w-full">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Audio Player Modal -->
+    <div class="modal-overlay" id="audioModal">
+        <div class="modal-box audio-player-modal">
+            <button class="modal-close" id="closeAudio">&times;</button>
+            <i class="fas fa-headphones text-5xl text-yellow-700 mb-4"></i>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Audio Ads</h3>
+            <p class="text-gray-600 mb-4" id="audioTrackTitle">Accommodation & Conference</p>
+            <audio id="audioElement" src="AUD-20241220-WA0004.mp3"></audio>
+            <div class="flex items-center justify-center gap-4 mb-4">
+                <button id="audioPrev" class="carousel-nav bg-gray-800 hover:bg-yellow-700"><i class="fas fa-step-backward"></i></button>
+                <button id="audioPlayPause" class="carousel-nav bg-yellow-700 hover:bg-gray-800" style="font-size:1.5rem;"><i class="fas fa-play"></i></button>
+                <button id="audioNext" class="carousel-nav bg-gray-800 hover:bg-yellow-700"><i class="fas fa-step-forward"></i></button>
+            </div>
+            <div class="flex items-center gap-3 max-w-xs mx-auto">
+                <i class="fas fa-volume-down text-gray-600"></i>
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.8" class="w-full">
+                <i class="fas fa-volume-up text-gray-600"></i>
+            </div>
+            <p class="text-xs text-gray-500 mt-3">4 Ads available</p>
+        </div>
+    </div>
+   <!-- Video Player Modal with Seek Bar & Fullscreen -->
+<div class="modal-overlay" id="videoModal">
+    <div class="modal-box video-player-modal" style="max-width: 900px; width: 95%; padding: 1.5rem;">
+        <button class="modal-close" id="closeVideo">&times;</button>
+        <div class="video-container">
+            <video id="videoElement" style="width:100%; display:block;" controlsList="nodownload" disablePictureInPicture>
+                <source src="Mika Hotel Ad_2.mp4" type="video/mp4">
+            </video>
+        </div>
+        <!-- Custom Controls -->
+        <div class="video-controls-custom">
+            <button id="videoPlayPause" class="carousel-nav bg-yellow-700 hover:bg-gray-800" style="font-size:1.2rem;"><i class="fas fa-pause"></i></button>
+            <button id="videoPrev" class="carousel-nav bg-gray-800 hover:bg-yellow-700"><i class="fas fa-step-backward"></i></button>
+            <button id="videoNext" class="carousel-nav bg-gray-800 hover:bg-yellow-700"><i class="fas fa-step-forward"></i></button>
+            <div class="seek-bar" id="seekBar">
+                <div class="seek-bar-fill" id="seekBarFill"></div>
+            </div>
+            <button class="fullscreen-btn" id="fullscreenBtn"><i class="fas fa-expand"></i></button>
+        </div>
+        <p class="text-xs text-gray-500 mt-2 text-center" id="videoTrackInfo">Video 1 of 3</p>
+    </div>
+</div>
+
+    <!-- Success Toast -->
+    <div class="success-toast" id="successToast"><i class="fas fa-check-circle mr-2"></i> <span id="toastMessage">Message sent successfully!</span></div>
+
+    <!-- Promo Modal after 3 minutes -->
+    <div class="modal-overlay" id="promoModal">
+        <div class="modal-box">
+            <button class="modal-close" id="closePromoModal">&times;</button>
+            <img src="wedding pop up.jpg" alt="Promo" class="w-full h-48 object-cover mb-4">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">🎉 Exclusive Summer Offer!</h3>
+            <p class="text-gray-600 mb-4">Book a 3-night stay and enjoy <strong>25% off</strong> with complimentary breakfast. Limited time only!</p>
+            <a href="#products" class="btn-dark inline-block">Book Now</a>
+            <a href="Mika wedding.jpg" class="btn-dark inline-block" target="_blank">Download</a>
+        </div>
+    </div>
+
+    <script>
+        // Navbar scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 80));
+
+        // Mobile menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            mobileOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+        mobileOverlay.addEventListener('click', closeMobileMenu);
+        document.querySelectorAll('.mobile-nav-link').forEach(l => l.addEventListener('click', closeMobileMenu));
+        function closeMobileMenu() { hamburger.classList.remove('active'); mobileMenu.classList.remove('active'); mobileOverlay.classList.remove('active'); document.body.style.overflow = ''; }
+
+        // Hero slider
+        const heroSlides = document.querySelectorAll('.hero-slide');
+        const heroDotsContainer = document.getElementById('heroDots');
+        let currentHero = 0;
+        heroSlides.forEach((_, i) => {
+            const dot = document.createElement('div'); dot.classList.add('hero-dot'); if(i===0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToHero(i)); heroDotsContainer.appendChild(dot);
+        });
+        const heroDots = document.querySelectorAll('.hero-dot');
+        function goToHero(i) { heroSlides.forEach(s => s.classList.remove('active')); heroDots.forEach(d => d.classList.remove('active')); heroSlides[i].classList.add('active'); heroDots[i].classList.add('active'); currentHero = i; }
+        setInterval(() => { const next = (currentHero+1)%heroSlides.length; heroSlides[currentHero].classList.remove('active'); heroSlides[next].classList.add('active'); heroDots[currentHero].classList.remove('active'); heroDots[next].classList.add('active'); currentHero = next; }, 5000);
+
+        // Product infinite carousel
+        const productData = [
+            {name:'Deluxe King Room',price:'$299/night',img:'img/MH/Deluxe/mh001-47.jpg',desc:'Spacious king bed with city views' },
+            {name:'Presidential Suite',price:'$599/night',img:'img/MH/Double Twin/DOX_3531.jpg',desc:'Ultimate luxury with private terrace'},
+            {name:'Ocean View Room',price:'$399/night',img:'img/MH/Deluxe/mh001-47.jpg',desc:'Stunning ocean panoramas'},
+            {name:'Family Suite',price:'$449/night',img:'img/MH/Deluxe/mh001-47.jpg',desc:'Perfect for family getaways'},
+            {name:'Honeymoon Villa',price:'$699/night',img:'img/MH/Deluxe/mh001-47.jpg',desc:'Romantic escape with private pool'},
+            {name:'Executive Suite',price:'$499/night',img:'img/MH/Deluxe/mh001-47.jpg',desc:'Business luxury with workspace'},
+        ];
+        const productTrack = document.getElementById('productTrack');
+        let productIndex = 0;
+        function getVisibleCards() { if(window.innerWidth<=480) return 1; if(window.innerWidth<=768) return 2; if(window.innerWidth>=1440) return 4; return 3; }
+        function renderProducts() {
+            productTrack.innerHTML = '';
+            const ext = [...productData, ...productData, ...productData];
+            ext.forEach(p => {
+                const card = document.createElement('div'); card.className='product-card';
+                card.innerHTML = `<img src="${p.img}" alt="${p.name}" loading="lazy"><div class="p-5"><h4 class="font-bold text-gray-800 mb-1">${p.name}</h4><p class="text-yellow-700 font-semibold mb-2">${p.price}</p><p class="text-gray-500 text-sm">${p.desc}</p><a href="Check availability.html" class="btn-dark mt-3 inline-block text-xs px-4 py-2">Book Now</a></div>`;
+                productTrack.appendChild(card);
+            });
+            updateProductPos();
+        }
+        function updateProductPos() {
+            const card = productTrack.querySelector('.product-card');
+            if(!card) return;
+            const cardW = card.offsetWidth + 24;
+            productTrack.style.transform = `translateX(-${productIndex * cardW}px)`;
+        }
+        document.getElementById('carouselNext').addEventListener('click', ()=>{ productIndex = (productIndex+1)%productData.length; updateProductPos(); });
+        document.getElementById('carouselPrev').addEventListener('click', ()=>{ productIndex = (productIndex-1+productData.length)%productData.length; updateProductPos(); });
+        window.addEventListener('resize', ()=>{ renderProducts(); });
+        renderProducts();
+
+        // Smooth Infinite Sliders
+        function setupInfiniteSlider(containerId, trackId, prevId, nextId, interval = 3000) {
+            const container = document.getElementById(containerId);
+            const track = document.getElementById(trackId);
+            const prevBtn = document.getElementById(prevId);
+            const nextBtn = document.getElementById(nextId);
+            if (!container || !track) return;
+
+            const slides = Array.from(track.children);
+            if (slides.length === 0) return;
+
+            // Clone first and last
+            const firstClone = slides[0].cloneNode(true);
+            const lastClone = slides[slides.length - 1].cloneNode(true);
+            firstClone.id = 'first-clone';
+            lastClone.id = 'last-clone';
+            track.appendChild(firstClone);
+            track.insertBefore(lastClone, slides[0]);
+
+            let counter = 1;
+            let size = slides[0].getBoundingClientRect().width;
+            let autoScroll;
+            track.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+            function updateTrack() {
+                track.style.transition = "transform 0.7s ease-in-out";
+                track.style.transform = 'translateX(' + (-size * counter) + 'px)';
+            }
+
+            function nextSlide() {
+                if (counter >= slides.length + 1) return;
+                counter++;
+                updateTrack();
+            }
+
+            function prevSlide() {
+                if (counter <= 0) return;
+                counter--;
+                updateTrack();
+            }
+
+            function startAuto() {
+                stopAuto();
+                autoScroll = setInterval(nextSlide, interval);
+            }
+
+            function stopAuto() {
+                clearInterval(autoScroll);
+            }
+
+            track.addEventListener('transitionend', () => {
+                if (slides[counter] && slides[counter].id === 'first-clone') {
+                    track.style.transition = "none";
+                    counter = 1;
+                    track.style.transform = 'translateX(' + (-size * counter) + 'px)';
+                }
+                if (slides[counter] && slides[counter].id === 'last-clone') {
+                    track.style.transition = "none";
+                    counter = slides.length - 2;
+                    track.style.transform = 'translateX(' + (-size * counter) + 'px)';
+                }
+            });
+
+            nextBtn.addEventListener('click', () => { nextSlide(); stopAuto(); startAuto(); });
+            prevBtn.addEventListener('click', () => { prevSlide(); stopAuto(); startAuto(); });
+            container.addEventListener('mouseenter', stopAuto);
+            container.addEventListener('mouseleave', startAuto);
+            window.addEventListener('resize', () => {
+                size = slides[0].getBoundingClientRect().width;
+                track.style.transition = "none";
+                track.style.transform = 'translateX(' + (-size * counter) + 'px)';
+            });
+
+            startAuto();
+        }
+
+        // Initialize all smooth sliders
+        setupInfiniteSlider('portfolioSlider', 'portfolioTrack', 'portfolioPrev', 'portfolioNext', 2000);
+        setupInfiniteSlider('newsSlider', 'newsTrack', 'newsPrev', 'newsNext', 3500);
+        setupInfiniteSlider('showcaseSlider', 'showcaseTrack', 'showcasePrev', 'showcaseNext', 4000);
+
+        // Core values number scroll
+        const coreNumbers = document.querySelectorAll('.core-value-number');
+        let animated = false;
+        function animateCore() {
+            if(animated) return;
+            const sec = document.getElementById('core-values');
+            if(!sec) return;
+            const rect = sec.getBoundingClientRect();
+            if(rect.top < window.innerHeight-100 && rect.bottom>0) {
+                animated = true;
+                coreNumbers.forEach(el => {
+                    const target = parseInt(el.dataset.target);
+                    const speed = parseInt(el.dataset.speed)||80;
+                    let cur = 0;
+                    const inc = target/speed;
+                    const timer = setInterval(()=>{ cur+=inc; if(cur>=target){cur=target; clearInterval(timer);} el.textContent = Math.floor(cur); },30);
+                });
+            }
+        }
+        window.addEventListener('scroll', animateCore);
+        animateCore();
+
+        // Success toast
+        const toast = document.getElementById('successToast');
+        const toastMsg = document.getElementById('toastMessage');
+        function showToast(msg) { toastMsg.textContent=msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),4000); }
+
+        // ---------- WEB3FORMS API KEYS ----------
+const MAIN_ACCESS_KEY = 'YOUR_MAIN_ACCESS_KEY';       // For contact & newsletter
+const FEEDBACK_ACCESS_KEY = 'YOUR_FEEDBACK_ACCESS_KEY'; // Separate key for feedback form
+
+        // Generic form submission (updated)
+async function submitForm(form, successMsg, accessKey = MAIN_ACCESS_KEY) {
+    const fd = new FormData(form);
+    fd.append('access_key', accessKey);
+    try {
+        const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (data.success) { showToast(successMsg); form.reset(); }
+        else showToast('❌ Something went wrong.');
+    } catch (e) { showToast('❌ Network error.'); }
+}
+
+      // Contact form (main key)
+document.getElementById('contactForm').addEventListener('submit', e => {
+    e.preventDefault();
+    submitForm(e.target, '✅ Message sent! We will get back to you.', MAIN_ACCESS_KEY);
+});
+
+// Newsletter (main key)
+document.getElementById('newsletterForm').addEventListener('submit', e => {
+    e.preventDefault();
+    submitForm(e.target, '✅ Subscribed successfully!', MAIN_ACCESS_KEY);
+});
+
+// Feedback form (separate key) – also close the modal after submit
+document.getElementById('feedbackForm').addEventListener('submit', e => {
+    e.preventDefault();
+    submitForm(e.target, '✅ Feedback submitted. Thank you!', FEEDBACK_ACCESS_KEY);
+    closeModal(document.getElementById('feedbackModal'));
+});
+        document.getElementById('contactForm').addEventListener('submit', e=>{ e.preventDefault(); submitForm(e.target, '✅ Message sent! We will get back to you.'); });
+        document.getElementById('newsletterForm').addEventListener('submit', e=>{ e.preventDefault(); submitForm(e.target, '✅ Subscribed successfully!'); });
+        document.getElementById('feedbackForm').addEventListener('submit', e=>{ e.preventDefault(); submitForm(e.target, '✅ Feedback submitted. Thank you!'); closeModal(document.getElementById('feedbackModal')); });
+
+        // Modals
+        function openModal(m) { m.classList.add('active'); document.body.style.overflow='hidden'; }
+        function closeModal(m) { m.classList.remove('active'); document.body.style.overflow=''; }
+        document.getElementById('feedbackFloat').addEventListener('click', ()=> openModal(document.getElementById('feedbackModal')));
+        document.getElementById('closeFeedback').addEventListener('click', ()=> closeModal(document.getElementById('feedbackModal')));
+        document.getElementById('feedbackModal').addEventListener('click', function(e){ if(e.target===this) closeModal(this); });
+
+        // Audio Modal
+        const audioModal = document.getElementById('audioModal');
+        document.getElementById('audioFloat').addEventListener('click', ()=> openModal(audioModal));
+        document.getElementById('closeAudio').addEventListener('click', ()=> closeModal(audioModal));
+        audioModal.addEventListener('click', function(e){ if(e.target===this) closeModal(this); });
+
+        // Audio player logic
+        const audio = document.getElementById('audioElement');
+        const playPauseBtn = document.getElementById('audioPlayPause');
+        const audioTitle = document.getElementById('audioTrackTitle');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const tracks = [
+            {title:'Ocean Waves', src:'AUD-20241220-WA0005.mp3'},
+            {title:'Jazz Lounge', src:'AUD-20250514-WA0003.mp3'},
+            {title:'Piano Serenity', src:'AUD-20241220-WA0004.mp3'},
+            {title:'Ambient Dreams', src:'AUD-20250514-WA0003.mp3'}
+        ];
+        let currentTrack = 0;
+        function loadTrack(i) {
+            currentTrack = i;
+            audio.src = tracks[i].src;
+            audioTitle.textContent = `Track ${i+1} - ${tracks[i].title}`;
+            audio.load();
+            audio.play().then(()=> playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>');
+        }
+        playPauseBtn.addEventListener('click', ()=>{
+            if(audio.paused) { audio.play(); playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>'; }
+            else { audio.pause(); playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; }
+        });
+        document.getElementById('audioNext').addEventListener('click', ()=> loadTrack((currentTrack+1)%tracks.length));
+        document.getElementById('audioPrev').addEventListener('click', ()=> loadTrack((currentTrack-1+tracks.length)%tracks.length));
+        volumeSlider.addEventListener('input', ()=> audio.volume = volumeSlider.value);
+        audio.addEventListener('ended', ()=> loadTrack((currentTrack+1)%tracks.length));
+        audio.src = tracks[0].src;
+        audio.load();
+        audioTitle.textContent = `Track 1 - ${tracks[0].title}`;
+
+        // ---------- VIDEO PLAYER WITH SEEK BAR & FULLSCREEN ----------
+const videoModal = document.getElementById('videoModal');
+const video = document.getElementById('videoElement');
+const videoPlayPauseBtn = document.getElementById('videoPlayPause');
+const videoPrevBtn = document.getElementById('videoPrev');
+const videoNextBtn = document.getElementById('videoNext');
+const videoTitle = document.getElementById('videoTrackInfo');
+const seekBar = document.getElementById('seekBar');
+const seekBarFill = document.getElementById('seekBarFill');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+const videoTracks = [
+    { title: 'Hotel Tour', src: 'Mika Hotel Ad_2.mp4' },
+    { title: 'Room Overview', src: 'Mika wedding ad cvh.mp4' },
+    { title: 'Amenities Showcase', src: 'Jan-March 2026 Updated.mp4' }
+];
+let currentVideo = 0;
+
+function loadVideo(index) {
+    currentVideo = index;
+    video.querySelector('source').src = videoTracks[index].src;
+    video.load();
+    video.play().then(() => videoPlayPauseBtn.innerHTML = '<i class="fas fa-pause"></i>');
+    videoTitle.textContent = `Video ${index+1} of ${videoTracks.length} - ${videoTracks[index].title}`;
+}
+
+videoPlayPauseBtn.addEventListener('click', () => {
+    if (video.paused) {
+        video.play();
+        videoPlayPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    } else {
+        video.pause();
+        videoPlayPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+    }
+});
+
+videoNextBtn.addEventListener('click', () => {
+    let next = (currentVideo + 1) % videoTracks.length;
+    loadVideo(next);
+});
+videoPrevBtn.addEventListener('click', () => {
+    let prev = (currentVideo - 1 + videoTracks.length) % videoTracks.length;
+    loadVideo(prev);
+});
+
+// Seek bar update
+video.addEventListener('timeupdate', () => {
+    const percent = (video.currentTime / video.duration) * 100;
+    seekBarFill.style.width = percent + '%';
+});
+
+// Seek bar click
+seekBar.addEventListener('click', (e) => {
+    const rect = seekBar.getBoundingClientRect();
+    const pos = (e.clientX - rect.left) / rect.width;
+    video.currentTime = pos * video.duration;
+});
+
+// Fullscreen
+fullscreenBtn.addEventListener('click', () => {
+    const videoContainer = document.querySelector('.video-container');
+    if (!document.fullscreenElement) {
+        if (videoContainer.requestFullscreen) {
+            videoContainer.requestFullscreen();
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+});
+
+// Open video modal
+document.getElementById('videoFloat').addEventListener('click', () => {
+    openModal(videoModal);
+    loadVideo(currentVideo);
+});
+document.getElementById('closeVideo').addEventListener('click', () => {
+    video.pause();
+    closeModal(videoModal);
+});
+videoModal.addEventListener('click', function(e) {
+    if (e.target === videoModal) {
+        video.pause();
+        closeModal(videoModal);
+    }
+});
+
+        // Promo modal after 3 minutes
+        const promoModal = document.getElementById('promoModal');
+        setTimeout(() => openModal(promoModal), 180000);
+        document.getElementById('closePromoModal').addEventListener('click', ()=> closeModal(promoModal));
+        promoModal.addEventListener('click', function(e){ if(e.target===this) closeModal(this); });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', function(e) {
+                const id = this.getAttribute('href');
+                if(id==='#') return;
+                const target = document.querySelector(id);
+                if(target) { e.preventDefault(); target.scrollIntoView({behavior:'smooth', block:'start'}); }
+            });
+        });
+
+        console.log(' Mika Hotels - Smooth infinite sliders & audio player activated.');
+    </script>
+     <!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/69e5112e10d9851c34e0f32d/1jmjcm8a2';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+</html>

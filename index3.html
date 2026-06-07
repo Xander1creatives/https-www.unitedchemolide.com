@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uciz - Water & Solar Solutions</title>
+    <link rel="icon" type="image/x-icon" href="#">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"> 
+    
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation - Blue with Animation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #007bff; /* Changed to blue */
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.4s ease;
+            padding: 10px 0;
+        }
+        
+        header.scrolled {
+            background-color: #04133df3; /* Darker blue when scrolled */
+            padding: 5px 0;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        /* The dropdown container */
+.dropdown {
+  float: center;
+  overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 3px 10px;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  margin: 4; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: rgb(1, 4, 18);
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #1d82ef;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #020115;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            transition: all 0.4s ease;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: rgb(255, 255, 255);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a:hover {
+            transform: translateY(-2px);
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: white;
+            transition: transform 0.4s ease;
+            z-index: 1001;
+        }
+        
+        .hamburger.active {
+            transform: rotate(90deg);
+        }
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+             background: rgb(4, 1, 15);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon fill="rgba(255,255,255,0.03)" points="0,100 100,0 100,100"/></svg>');
+            background-size: cover;
+        }
+        
+        .hero-content {
+            color: white;
+            z-index: 2;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+             
+        
+        
+        /* Gallery Section */
+        .gallery-section {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #007bff;
+        }
+        
+        .section-title p {
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            height: 250px;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+        
+        /* Services Section */
+        .services-section {
+            padding: 80px 0;
+            background-color: #fff;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .service-card p {
+            color: #666;
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            padding: 80px 0;
+            background-color: #041322;
+            color: white;
+        }
+        
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px;
+        }
+        
+        .contact-info h3, .contact-form h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .contact-details {
+            margin-top: 30px;
+        }
+        
+        .contact-details p {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-details i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .contact-form form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background-color: #fff;
+            color: #007bff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-self: flex-start;
+            font-weight: 600;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0462cd;
+            color: #ffffff;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #137dee;
+            color: white;
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #010515;
+        }
+        
+        .social-icons {
+            margin-bottom: 20px;
+        }
+        
+        .social-icons a {
+            color: #ffffff;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            color: #020118;
+        }
+        
+        .copyright {
+            color: #ffffff;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        
+        
+        
+        @media screen and (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                flex-direction: column;
+                background-color: #007bff;
+                width: 70%;
+                height: 100vh;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                padding: 80px 30px 30px;
+                transition: right 0.4s ease;
+                gap: 20px;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                margin-left: 0;
+                opacity: 0;
+                transform: translateX(20px);
+                transition: all 0.4s ease;
+            }
+            
+            .nav-links.active li {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            
+            .nav-links.active li:nth-child(1) { transition-delay: 0.3s; }
+            .nav-links.active li:nth-child(2) { transition-delay: 0.4s; }
+            .nav-links.active li:nth-child(3) { transition-delay: 0.5s; }
+            .nav-links.active li:nth-child(4) { transition-delay: 0.6s; }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .submit-btn {
+                align-self: stretch;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+       
+        /* Image Section Styles */
+        .image-section {
+            width: 100%;
+            margin: 40px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease;
+        }
+        
+        .image-section:hover {
+            transform: translateY(-5px);
+        }
+        
+        .image-container {
+            width: 100%;
+            aspect-ratio: 1920 / 1280; /* 3:2 aspect ratio */
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .landscape-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.5s ease;
+        }
+        
+        .image-container:hover .landscape-image {
+            transform: scale(1.05);
+        }
+        
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 30px 20px 20px;
+            color: white;
+        }
+        
+        .image-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .image-description {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+            
+        
+        @media screen and (max-width: 576px) {
+            
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .gallery-item, .service-card {
+                height: auto;
+            }
+        }
+        .simple-marquee {
+            background: #ffffff00;
+            padding: 15px 0;
+            margin: 20px 0;
+        }
+        
+        
+        .logo {
+            display: inline-block;
+            margin: 0 0.5px;
+        }
+        
+        .logo img {
+            height: 180px;
+            width: auto;
+            margin-left: 70px;
+        }
+
+        /* Hero slider*/
+        .hero-slider {
+            width: 100%;
+            height: 100vh; /* Uses full viewport height */
+            max-height: 1200px; /* Limits height on large screens */
+            margin-top: 84px;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .slide-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Prevents image distortion and cropping */
+        }
+
+        /* Navigation Buttons */
+        .swiper-button-prev,
+        .swiper-button-next {
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .swiper-button-prev:after,
+        .swiper-button-next:after {
+            font-size: 20px;
+        }
+
+        .hero-slider:hover .swiper-button-prev,
+        .hero-slider:hover .swiper-button-next {
+            opacity: 1;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .swiper-button-prev,
+            .swiper-button-next {
+                display: flex; /* Hides buttons on touch devices */
+                margin-top: -200px;
+            
+            }
+            .slide-image {
+            width: 100%;
+            height: 40%;
+            object-fit: contain; /* Prevents image distortion and cropping */
+
+        }
+        .hero-slider {
+            width: 100%;
+            height: 100vh; /* Uses full viewport height */
+            margin-top: -180px;
+            margin-bottom: -260px;
+        }
+        .swiper-button-prev,
+        .swiper-button-next {
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .swiper-button-prev:after,
+        .swiper-button-next:after {
+            font-size: 10px;
+        }
+        }
+        @media (max-width: 320px) {
+            .swiper-button-prev,
+            .swiper-button-next {
+                display: flex; /* Hides buttons on touch devices */
+                margin-top: -200px;
+            
+            }
+            .slide-image {
+            width: 100%;
+            height: 40%;
+            object-fit: cover; /* Prevents image distortion and cropping */
+
+        }
+        .hero-slider {
+            width: 100%;
+            height: 100vh; /* Uses full viewport height */
+            margin-top: -180px;
+            margin-bottom: -260px;
+        }
+        .swiper-button-prev,
+        .swiper-button-next {
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .swiper-button-prev:after,
+        .swiper-button-next:after {
+            font-size: 10px;
+        }
+        }
+        /*phone screens*/
+        @media (max-width: 600px) {
+            .swiper-button-prev,
+            .swiper-button-next {
+                display: flex; /* Hides buttons on touch devices */
+                margin-top: -180px;
+            
+            }
+            .slide-image {
+            width: 100%;
+            height: 40%;
+            object-fit: contain; /* Prevents image distortion and cropping */
+
+        }
+        .hero-slider {
+            width: 100%;
+            height: 100vh; /* Uses full viewport height */
+            margin-top: -190px;
+            margin-bottom: -290px;
+        }
+        .swiper-button-prev,
+        .swiper-button-next {
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .swiper-button-prev:after,
+        .swiper-button-next:after {
+            font-size: 10px;
+        }
+        .hamburger {
+                display: block;
+                margin-left: 30px;
+            }
+            .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+        }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                flex-direction: column;
+                background-color: #007bff;
+                width: 55%;
+                height: 34vh;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                padding: 40px 15px 15px;
+                transition: right 0.5s ease;
+                gap: 10px;
+                margin-top: 10px;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                margin-left: 0;
+                opacity: 0;
+                transform: translateX(20px);
+                transition: all 0.50s ease;
+            }
+            
+            .nav-links.active li {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            
+            .nav-links.active li:nth-child(1) { transition-delay: 0.3s; }
+            .nav-links.active li:nth-child(2) { transition-delay: 0.3s; }
+            .nav-links.active li:nth-child(3) { transition-delay: 0.4s; }
+            .nav-links.active li:nth-child(4) { transition-delay: 0.5s; }
+            .nav-links.active li:nth-child(5) { transition-delay: 0.6s; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header id="navbar">
+        <div class="container">
+            <nav class="nav-container">
+                <a href="#home"><img src="united chemolidelogo1.png" style="width: 100px; height: 50px;"></a>
+                <div class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home">Home</a></li>
+
+                     <div class="dropdown">
+                    <button class="dropbtn">Products
+                    <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                    <a href="#">Pump Solutions</a>
+                    <a href="#">Solar Products</a>
+                    <a href="#">Electronic Components</a>
+                    </div>
+                </div>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section with Improved Image Slider -->
+     <section class="hero-slider">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <!-- Duplicate your 7 slides here -->
+                <div class="swiper-slide">
+                    <img src="UCIZsolar.png" alt="Slide 1" class="slide-image">
+                </div>
+              
+                
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section" id="gallery">
+        <div class="container">
+            <div class="section-title">
+                <h2>Quality Pumps and Solar Solutions for You</h2>
+                <p>Explore our range of high-quality water pumps, solar products, irrigation equipment, and water treatment solutions.</p>
+            </div>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="UCIZpost.png" alt="Solar Water Pump" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <h3>Solar systems</h3>
+                        
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="UCIZpost1.png" alt="Irrigation System" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <h3>Pressure Pumps</h3>
+                       
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="UCIZpost4.png" alt="Pump Controllers" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <h3>Solar Pumps</h3>
+                      
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="UCIZpost2.png" alt="Water Treatment" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <h3>Solar Inverters</h3>
+                        
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="UCIZpost3.png" alt="Solar Panels" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <h3>Solar Panels</h3>
+                        
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="UCIZpost6.png" alt="Pump Controllers" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <h3>Water Treatment</h3>
+                        
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="UCIZpost5.png" alt="Pump Controllers" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <h3>Agri-irrigation</h3>
+                        
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="different-electrical-tools-wooden-background-flat-lay.jpg" alt="Filtration Systems" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <h3>Electronic Components</h3>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section" id="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Services</h2>
+                <p>Comprehensive solutions for all your water and energy needs.</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card" style="color: #02011d;">
+                    <div class="service-icon" style="color: #02011d;">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <h3>Water Pump Solutions</h3>
+                    <p style="color: #02011d;">Efficient and reliable water pumping systems for residential, agricultural, and industrial applications.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon" style="color: #02011d;">
+                        <i class="fas fa-solar-panel"></i>
+                    </div>
+                    <h3>Solar Products</h3>
+                    <p style="color: #02011d;">High-quality solar panels, inverters, and complete solar energy systems for sustainable power generation.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon" style="color: #02011d;">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3>Irrigation Equipment</h3>
+                    <p style="color: #02011d;">Advanced irrigation systems designed to maximize water efficiency and crop yield.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon" style="color: #02011d;">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    <h3>Water Treatment</h3>
+                    <p style="color: #02011d;">Comprehensive water purification and filtration solutions for clean, safe water.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+     <section class="image-section">
+            <div class="image-container" id="imageContainer">
+                <img src="solar-panels-roof-solar-cell(1).png" 
+                     alt="Snowy mountain landscape at sunset" 
+                     class="landscape-image">
+                <div class="image-overlay">
+                    
+                </div>
+            </div>
+        </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2 style="color: #ffffff;">About Us</h2>
+                <p style="color: #ffffff;">Our company provides systems for the distribution of clean water and waste water. 
+                    United Chemolide manufactures and assembles specialised KSB pumps for chemical mine waste disposal,
+                     tailings disposal and sewage, amongst other things. It uses Siemens automation systems
+                      for power transmission and control. United Chemolide began its fluid processing installation
+                       service in 1986 in response to numerous requests for water rehabilitation and reticulation
+                        projects by District Councils. Supply of both Domestic and Industrial Pumps, Solar products,
+                         irrigation equipment, electrical components, Water Treatment Solutions and construction services.
+                          We stock high quality products to suit your need.</p>
+            </div>
+            <div class="section-title">
+                <h2 style="color: #ffffff;">Contact Us</h2>
+                <p style="color: #ffffff;">Get in touch with our experts for customized solutions.</p>
+            </div>
+            
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>UCIZ</h3>
+                    <p>Supplying pumps, solar products, and irrigation solutions.</p>
+                    
+                    <div class="contact-details">
+                        <p><i class="fas fa-phone"></i>+(260) 2112 89 080, +260 777 321 804</p>
+                        <p><i class="fas fa-envelope"></i> unitedchemolide@gmail.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Mukatasha Road Lusaka ZM, 10101, Zambia.</p>
+                        <p><i class="fas fa-clock"></i> Mon-Sat: 8:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h3>Send a Message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Your Message</label>
+                            <textarea id="message" class="form-control" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <marquee class="simple-marquee" behavior="scroll" direction="left" scrollamount="5">
+        <div class="logo">
+            <img src="iso.webp" alt="Brand A">
+        </div>
+        <div class="logo">
+            <img src="zabs.webp" alt="Brand B">
+        </div>
+        <div class="logo">
+            <img src="proudly-zambian-white.webp" alt="Brand C">
+        </div>
+        <div class="logo">
+            <img src="sabs.webp" alt="Brand D">
+        </div>
+        <div class="logo">
+            <img src="iso.webp" alt="Brand A">
+        </div>
+        <div class="logo">
+            <img src="zabs.webp" alt="Brand B">
+        </div>
+        <div class="logo">
+            <img src="proudly-zambian-white.webp" alt="Brand C">
+        </div>
+        <div class="logo">
+            <img src="sabs.webp" alt="Brand D">
+        </div>
+        <div class="logo">
+            <img src="iso.webp" alt="Brand A">
+        </div>
+        <div class="logo">
+            <img src="zabs.webp" alt="Brand B">
+        </div>
+        <div class="logo">
+            <img src="proudly-zambian-white.webp" alt="Brand C">
+        </div>
+        <div class="logo">
+            <img src="sabs.webp" alt="Brand D">
+        </div><div class="logo">
+            <img src="iso.webp" alt="Brand A">
+        </div>
+        <div class="logo">
+            <img src="zabs.webp" alt="Brand B">
+        </div>
+        <div class="logo">
+            <img src="proudly-zambian-white.webp" alt="Brand C">
+        </div>
+        <div class="logo">
+            <img src="sabs.webp" alt="Brand D">
+        </div>
+        
+    </marquee>
+    
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo" style="color: #ffff;">UCIZ</div>
+                
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#gallery">Gallery</a>
+                    <a href="#services">Services</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/UCIZL"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/unitedchemolidezambia/?igsh=cXVxcnhzOGZ4Yjlk"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/unitedchemolidezambia/?igsh=cXVxcnhzOGZ4Yjlk"><i class="fab fa-instagram"></i></a>
+                    <a href="https://unitedchemolide.com/"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                
+                <div class="copyright">
+                    &copy; 2025 Uciz. All Rights Reserved. | Water Pumps, Solar Products, Irrigation Equipment & Water Treatment
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Navigation Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        
+        hamburger.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        const navLinksItems = document.querySelectorAll('.nav-links a');
+        navLinksItems.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
+        });
+
+        
+            // Function to go to a specific slide
+            function goToSlide(n) {
+                currentSlide = (n + slideCount) % slideCount;
+                slidesContainer.style.transform = `translateX(-${currentSlide * (100 / slideCount)}%)`;
+                
+                // Update dots
+                dots.forEach(dot => dot.classList.remove('active'));
+                dots[currentSlide].classList.add('active');
+            }
+            
+            
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message. We will get back to you soon!');
+            this.reset();
+        });
+        
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const swiper = new Swiper('.swiper-container', {
+                loop: true, // Enables continuous loop mode
+                speed: 1000, // Smooth transition speed (milliseconds)
+                autoplay: {
+                    delay: 4000, // Auto-slide every 4 seconds
+                    disableOnInteraction: false,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                effect: 'slide', // Classic left-to-right slide
+                slidesPerView: 1,
+                spaceBetween: 0,
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</body>
+</html>
