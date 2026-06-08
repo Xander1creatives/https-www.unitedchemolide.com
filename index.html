@@ -115,7 +115,7 @@
         #navbar.nav-transparent .logo-light {
             display: block;
         }
-        /* Dropdown */
+       /* Dropdown */
         .dropdown-menu {
             opacity: 0;
             visibility: hidden;
@@ -130,18 +130,28 @@
             transform: translateY(0);
         }
         @media (max-width: 768px) {
-            .dropdown-menu {
-                position: static;
-                opacity: 1;
-                visibility: visible;
-                transform: none;
-                display: none;
-                box-shadow: none;
-                padding-left: 1rem;
-            }
-            .dropdown-menu.open {
-                display: block;
-            }
+           .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border-radius: 2px !important;
+        }
+        .dropdown-trigger:hover .dropdown-menu,
+        .dropdown-trigger:focus-within .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            border-radius: 0 !important;
+        }
+        .mobile-menu.open {
+            max-height: 600px;
+        }
         }
         /* Marquee */
         .marquee-wrapper {
@@ -313,15 +323,25 @@
         @media (max-width: 300px) {
             .hero-container {
                 aspect-ratio: 2600/1200;
+                margin-top: 60px;
             }
             body {
                 font-size: 13px;
             }
+            .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            border-radius: 0 !important;
+        }
+        .mobile-menu.open {
+            max-height: 400px;
+        }
             h1 {
-                font-size: 1.1rem !important;
+                font-size: 0.25rem !important;
             }
             h2 {
-                font-size: 0.95rem !important;
+                font-size: 0.15rem !important;
             }
             h3 {
                 font-size: 0.85rem !important;
@@ -330,6 +350,8 @@
                 padding-left: 6px !important;
                 padding-right: 6px !important;
             }
+            
+      
         }
         @media (max-width: 200px) {
             .hero-container {
@@ -338,8 +360,9 @@
             body {
                 font-size: 11px;
             }
+           
             h1 {
-                font-size: 0.9rem !important;
+                font-size: 0.3rem !important;
             }
             h2 {
                 font-size: 0.8rem !important;
@@ -351,6 +374,8 @@
                 padding-left: 3px !important;
                 padding-right: 3px !important;
             }
+           
+        
         }
         @media (min-width: 1440px) {
             .container-custom {
@@ -369,15 +394,22 @@
         }
         @media (max-width: 480px) {
             .hero-overlay-content {
-                bottom: 8%;
+                bottom: 30%;
                 left: 4%;
             }
+           
             .hero-overlay-content h1 {
                 font-size: 1rem !important;
             }
             .hero-overlay-content p {
                 font-size: 0.7rem !important;
             }
+            .hero-container {
+                aspect-ratio: 2600/1200;
+                margin-top: 65px;
+            }
+           
+            
         }
     </style>
 </head>
@@ -425,16 +457,12 @@
         <div id="mobileMenu" class="mobile-menu md:hidden bg-white rounded-sm shadow-lg mx-2">
             <a href="#home" class="block px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50">Home</a>
             <a href="#about" class="block px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50">About</a>
+            <a href="products.html" class="block px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50">Products</a>
             <button id="mobileDropdownBtn" class="w-full text-left px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50 flex items-center justify-between">
-                Products <i class="fas fa-chevron-down text-xs transition-transform" id="mobileDropdownIcon"></i>
+                
             </button>
-            <div id="mobileDropdown" class="dropdown-menu bg-gray-50">
-                <a href="products.html" class="block px-6 py-2 text-sm text-gray-600 hover:text-primary">Water Pumps</a>
-                <a href="products.html" class="block px-6 py-2 text-sm text-gray-600 hover:text-primary">Irrigation Equipment</a>
-                <a href="products.html" class="block px-6 py-2 text-sm text-gray-600 hover:text-primary">Solar Products</a>
-                <a href="products.html" class="block px-6 py-2 text-sm text-gray-600 hover:text-primary">Water Treatment</a>
-                <a href="products.html" class="block px-6 py-2 text-sm text-gray-600 hover:text-primary">Accessories</a>
-            </div>
+            
+           
             <a href="#services" class="block px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50">Services</a>
             <a href="#gallery" class="block px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50">Gallery</a>
             <a href="projects.html" class="block px-4 py-3 text-sm text-gray-700 border-b border-gray-100 hover:bg-blue-50">Projects</a>
@@ -645,28 +673,7 @@
     </div>
 </section>
 
-<!-- ==================== PRODUCT CAROUSEL ==================== -->
-<section class="py-12 md:py-16 bg-gray-50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-8 md:mb-12">
-            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Featured Products</h2>
-            <p class="text-gray-500 mt-2 text-sm md:text-base">Browse our top-selling equipment</p>
-        </div>
-        <div class="relative">
-            <div class="overflow-hidden" style="border-radius:2px !important;">
-                <div id="productCarouselTrack" class="product-carousel-track">
-                    <!-- Slides populated by JS -->
-                </div>
-            </div>
-            <button id="productPrev" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 bg-white shadow-md w-10 h-10 flex items-center justify-center hover:bg-primary hover:text-white transition z-10" style="border-radius:2px !important;">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button id="productNext" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 bg-white shadow-md w-10 h-10 flex items-center justify-center hover:bg-primary hover:text-white transition z-10" style="border-radius:2px !important;">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-    </div>
-</section>
+
 
 <!-- ==================== GALLERY SECTION ==================== -->
 <section id="gallery" class="py-12 md:py-16 lg:py-20 bg-white">
@@ -709,25 +716,25 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-white/95 p-6 text-center" style="border-radius:2px !important;">
-                <img src="" alt="Client 1" class="w-16 h-16 rounded-full mx-auto mb-3 object-cover" style="border-radius:50% !important;" loading="lazy">
+                <img src="8 Professional-Women-Resize-1.jpg" alt="Client 1" class="w-16 h-16 rounded-full mx-auto mb-3 object-cover" style="border-radius:50% !important;" loading="lazy">
                 <p class="text-gray-600 text-sm italic mb-3">"UCIZ transformed our farm irrigation. Water efficiency improved by 40%! Highly recommended."</p>
                 <h4 class="font-bold text-gray-900 text-sm">John M.</h4>
                 <span class="text-xs text-gray-500">Farm Owner</span>
             </div>
             <div class="bg-white/95 p-6 text-center" style="border-radius:2px !important;">
-                <img src="" alt="Client 2" class="w-16 h-16 rounded-full mx-auto mb-3 object-cover" style="border-radius:50% !important;" loading="lazy">
+                <img src="10581090.png" alt="Client 2" class="w-16 h-16 rounded-full mx-auto mb-3 object-cover" style="border-radius:50% !important;" loading="lazy">
                 <p class="text-gray-600 text-sm italic mb-3">"Their solar pump solution saved us thousands in electricity costs. Exceptional service!"</p>
                 <h4 class="font-bold text-gray-900 text-sm">Sarah K.</h4>
                 <span class="text-xs text-gray-500">Hotel Manager</span>
             </div>
             <div class="bg-white/95 p-6 text-center" style="border-radius:2px !important;">
-                <img src="" alt="Client 3" class="w-16 h-16 rounded-full mx-auto mb-3 object-cover" style="border-radius:50% !important;" loading="lazy">
+                <img src="JEMA SVA 010-05.jpg" alt="Client 3" class="w-16 h-16 rounded-full mx-auto mb-3 object-cover" style="border-radius:50% !important;" loading="lazy">
                 <p class="text-gray-600 text-sm italic mb-3">"The water treatment system they installed is flawless. Clean water at last for our community."</p>
                 <h4 class="font-bold text-gray-900 text-sm">David L.</h4>
                 <span class="text-xs text-gray-500">Community Leader</span>
             </div>
             <div class="bg-white/95 p-6 text-center" style="border-radius:2px !important;">
-                <img src="" alt="Client 4" class="w-16 h-16 rounded-full mx-auto mb-3 object-cover" style="border-radius:50% !important;" loading="lazy">
+                <img src="10581015.png" alt="Client 4" class="w-16 h-16 rounded-full mx-auto mb-3 object-cover" style="border-radius:50% !important;" loading="lazy">
                 <p class="text-gray-600 text-sm italic mb-3">"Quick response, professional team, and top-quality pumps. Our go-to water solution provider."</p>
                 <h4 class="font-bold text-gray-900 text-sm">Emily R.</h4>
                 <span class="text-xs text-gray-500">Industrial Director</span>
